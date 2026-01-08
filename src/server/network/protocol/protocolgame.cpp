@@ -57,6 +57,7 @@
 #include "items/weapons/weapons.hpp"
 #include "lua/creature/creatureevent.hpp"
 #include "lua/modules/modules.hpp"
+#include "map/house/housetile.hpp"
 #include "server/network/message/outputmessage.hpp"
 #include "utils/tools.hpp"
 #include "creatures/players/vocations/vocation.hpp"
@@ -703,6 +704,18 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 		player->setOperatingSystem(operatingSystem);
 
 		const auto tile = g_game().map.getOrCreateTile(player->getLoginPosition());
+
+		// Check if player's login position is in a house that they no logger own
+		bool validLoginPosition = true;
+		if (std::shared_ptr<HouseTile> houseTile = std::dynamic_pointer_cast<HouseTile>(tile)) {
+			const auto &house = houseTile->getHouse();
+			if (house && !house->isInvited(player)) {
+				validLoginPosition = false;
+				player->loginPosition = player->getTemplePosition();
+				g_logger().warn("Player {} tried to login in a house they no longer own, moving to temple", player->getName());
+			}
+		}
+
 		// moving from a pz tile to a non-pz tile
 		if (maxOnline > 1 && player->getAccountType() < ACCOUNT_TYPE_GAMEMASTER && !tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
 			auto maxOutsizePZ = g_configManager().getNumber(MAX_PLAYERS_OUTSIDE_PZ_PER_ACCOUNT);
@@ -719,7 +732,9 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 			}
 		}
 
-		if (!g_game().placeCreature(player, player->getLoginPosition()) && !g_game().placeCreature(player, player->getTemplePosition(), false, true)) {
+		//  Use temple posiiton if player's login position is valid
+		Position loginPos = validLoginPosition ? player->getLoginPosition() : player->getTemplePosition();
+		if (!g_game().placeCreature(player, loginPos)) {
 			disconnectClient("Temple position is wrong. Please, contact the administrator.");
 			g_logger().warn("Player {} temple position is wrong", player->getName());
 			return;
