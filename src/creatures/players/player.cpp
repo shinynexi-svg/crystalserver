@@ -1693,7 +1693,7 @@ void Player::sendLootStats(const std::shared_ptr<Item> &item, uint8_t count) {
 		trackerBatchPending = true;
 		const auto self = static_self_cast<Player>();
 		trackerBatchEventId = g_dispatcher().scheduleEvent(
-			250, [self] {
+			50, [self] {
 				self->flushBatchedTrackerData();
 			},
 			"Player::flushBatchedTrackerData"
@@ -1711,7 +1711,7 @@ void Player::updateSupplyTracker(const std::shared_ptr<Item> &item) {
 		trackerBatchPending = true;
 		const auto self = static_self_cast<Player>();
 		trackerBatchEventId = g_dispatcher().scheduleEvent(
-			250, [self] {
+			50, [self] {
 				self->flushBatchedTrackerData();
 			},
 			"Player::flushBatchedTrackerData"
@@ -1726,7 +1726,7 @@ void Player::updateImpactTracker(CombatType_t type, int32_t amount) const {
 		const_cast<Player*>(this)->trackerBatchPending = true;
 		const auto self = const_cast<Player*>(this)->static_self_cast<Player>();
 		const_cast<Player*>(this)->trackerBatchEventId = g_dispatcher().scheduleEvent(
-			250, [self] {
+			50, [self] {
 				self->flushBatchedTrackerData();
 			},
 			"Player::flushBatchedTrackerData"
@@ -1741,7 +1741,7 @@ void Player::updateInputAnalyzer(CombatType_t type, int32_t amount, const std::s
 		const_cast<Player*>(this)->trackerBatchPending = true;
 		const auto self = const_cast<Player*>(this)->static_self_cast<Player>();
 		const_cast<Player*>(this)->trackerBatchEventId = g_dispatcher().scheduleEvent(
-			250, [self] {
+			50, [self] {
 				self->flushBatchedTrackerData();
 			},
 			"Player::flushBatchedTrackerData"
@@ -1752,25 +1752,11 @@ void Player::updateInputAnalyzer(CombatType_t type, int32_t amount, const std::s
 void Player::flushBatchedTrackerData() {
 	trackerBatchPending = false;
 
+	if (batchedTrackerData.lootValue > 0) {
+		g_metrics().addCounter("player_loot", batchedTrackerData.lootValue, { { "player", getName() } });
+	}
+
 	for (const auto &[item, count] : batchedTrackerData.lootItems) {
-		uint64_t value = 0;
-		if (item) {
-			if (item->getID() == ITEM_GOLD_COIN || item->getID() == ITEM_PLATINUM_COIN || item->getID() == ITEM_CRYSTAL_COIN) {
-				if (item->getID() == ITEM_PLATINUM_COIN) {
-					value = static_cast<uint64_t>(count) * 100ULL;
-				} else if (item->getID() == ITEM_CRYSTAL_COIN) {
-					value = static_cast<uint64_t>(count) * 10000ULL;
-				} else {
-					value = static_cast<uint64_t>(count);
-				}
-			} else if (const auto &npc = g_game().getNpcByName("The Lootmonger")) {
-				const auto &iType = Item::items.getItemType(item->getID());
-				value = static_cast<uint64_t>(iType.sellPrice) * static_cast<uint64_t>(count);
-			}
-		}
-		if (value > 0) {
-			g_metrics().addCounter("player_loot", value, { { "player", getName() } });
-		}
 		if (client) {
 			client->sendLootStats(item, count);
 		}
@@ -11022,6 +11008,9 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 				outfitAttributes = false;
 			}
 		}
+
+		sendStats();
+		sendSkills();
 
 		if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) && getCurrentMount() != 0) {
 			toggleMount(true);
