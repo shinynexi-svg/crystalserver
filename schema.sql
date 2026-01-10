@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
     CONSTRAINT `server_config_pk` PRIMARY KEY (`config`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '59'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
+INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '61'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -597,6 +597,46 @@ CREATE TABLE IF NOT EXISTS `player_statements` (
 	`date` BIGINT NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`), KEY (`player_id`), KEY (`channel_id`),
 	FOREIGN KEY (`player_id`) REFERENCES `players`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure `player_bans`
+CREATE TABLE IF NOT EXISTS `player_bans` (
+    `player_id` int(11) NOT NULL,
+    `reason` varchar(255) NOT NULL,
+    `banned_at` bigint(20) NOT NULL,
+    `expires_at` bigint(20) NOT NULL,
+    `banned_by` int(11) NOT NULL,
+    INDEX `banned_by` (`banned_by`),
+    CONSTRAINT `player_bans_pk` PRIMARY KEY (`player_id`),
+    CONSTRAINT `player_bans_players_fk`
+        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT `player_bans_players2_fk`
+        FOREIGN KEY (`banned_by`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure `player_ban_history`
+CREATE TABLE IF NOT EXISTS `player_ban_history` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `player_id` int(11) NOT NULL,
+    `reason` varchar(255) NOT NULL,
+    `banned_at` bigint(20) NOT NULL,
+    `expired_at` bigint(20) NOT NULL,
+    `banned_by` int(11) NOT NULL,
+    INDEX `player_id` (`player_id`),
+    INDEX `banned_by` (`banned_by`),
+    CONSTRAINT `player_ban_history_pk` PRIMARY KEY (`id`),
+    CONSTRAINT `player_ban_history_players_fk`
+        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT `player_ban_history_players2_fk`
+        FOREIGN KEY (`banned_by`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `player_deaths`

@@ -31,6 +31,17 @@ local function moveExpiredBansToHistory()
 
 		Result.free(resultId)
 	end
+
+	resultId = db.storeQuery("SELECT * FROM `player_bans` WHERE `expires_at` != 0 AND `expires_at` <= " .. os.time())
+	if resultId then
+		repeat
+			local playerId = Result.getNumber(resultId, "player_id")
+			db.asyncQuery("INSERT INTO `player_ban_history` (`player_id`, `reason`, `banned_at`, `expired_at`, `banned_by`) VALUES (" .. playerId .. ", " .. db.escapeString(Result.getString(resultId, "reason")) .. ", " .. Result.getNumber(resultId, "banned_at") .. ", " .. Result.getNumber(resultId, "expires_at") .. ", " .. Result.getNumber(resultId, "banned_by") .. ")")
+			db.asyncQuery("DELETE FROM `player_bans` WHERE `player_id` = " .. playerId)
+		until not Result.next(resultId)
+
+		Result.free(resultId)
+	end
 end
 
 -- Function to store towns in the database
