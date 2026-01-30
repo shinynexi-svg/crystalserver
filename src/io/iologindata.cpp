@@ -173,6 +173,9 @@ bool IOLoginData::loadPlayer(const std::shared_ptr<Player> &player, const DBResu
 		// Load instant spells list
 		IOLoginDataLoad::loadPlayerInstantSpellList(player, result);
 
+		// load weapon proficiency
+		IOLoginDataLoad::loadPlayerWeaponProficiency(player, result);
+
 		if (disableIrrelevantInfo) {
 			return true;
 		}

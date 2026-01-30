@@ -1188,13 +1188,13 @@ void PlayerWheel::destroyGem(uint16_t index) {
 
 	switch (gem.quality) {
 		case WheelGemQuality_t::Lesser:
-			lesserFragments = normal_random(1, 5);
+			lesserFragments = uniform_random(1, 5);
 			break;
 		case WheelGemQuality_t::Regular:
-			lesserFragments = normal_random(2, 10);
+			lesserFragments = uniform_random(2, 10);
 			break;
 		case WheelGemQuality_t::Greater:
-			greaterFragments = normal_random(1, 5);
+			greaterFragments = uniform_random(1, 5);
 			break;
 	}
 
@@ -2155,12 +2155,12 @@ void PlayerWheel::registerPlayerBonusData() {
 		}
 		if (m_playerBonusData.stages.divineGrenade >= 2) {
 			WheelSpells::Bonus bonus;
-			bonus.decrease.cooldown = 4 * 1000;
+			bonus.decrease.cooldown = 6 * 1000;
 			addSpellBonus("Divine Grenade", bonus);
 		}
 		if (m_playerBonusData.stages.divineGrenade >= 3) {
 			WheelSpells::Bonus bonus;
-			bonus.decrease.cooldown = 6 * 1000;
+			bonus.decrease.cooldown = 4 * 1000;
 			addSpellBonus("Divine Grenade", bonus);
 		}
 	} else {
@@ -4005,10 +4005,10 @@ float PlayerWheel::calculateMitigation() const {
 		if (weapon->getAmmoType() == AMMO_BOLT || weapon->getAmmoType() == AMMO_ARROW) {
 			distanceFactor = m_player.vocation->mitigationSecondaryShield;
 		} else if (weapon->getSlotPosition() & SLOTP_TWO_HAND) {
-			defenseValue = weapon->getDefense() + weapon->getExtraDefense();
+			defenseValue = (weapon->getDefense() + m_player.getEquippedWeaponProficiency().defense) + (weapon->getExtraDefense() + m_player.getEquippedWeaponProficiency().weaponShieldMod);
 			shieldFactor = m_player.vocation->mitigationSecondaryShield;
 		} else {
-			defenseValue += weapon->getExtraDefense();
+			defenseValue += weapon->getExtraDefense() + m_player.getEquippedWeaponProficiency().weaponShieldMod;
 			shieldFactor = m_player.vocation->mitigationPrimaryShield;
 		}
 	}

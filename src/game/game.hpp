@@ -47,6 +47,7 @@ class IOWheel;
 class ItemClassification;
 class Guild;
 class Mounts;
+class AttachedEffects;
 class Spectators;
 class Player;
 class Account;
@@ -138,6 +139,10 @@ public:
 	 */
 	void loadCustomMaps(const std::filesystem::path &customMapPath);
 	void loadMap(const std::string &path, const Position &pos = Position());
+
+	uint64_t getLastMapLoadTime() const {
+		return lastMapLoadTime;
+	}
 
 	void getMapDimensions(uint32_t &width, uint32_t &height) const {
 		width = map.width;
@@ -431,7 +436,7 @@ public:
 	void playerRequestAddVip(uint32_t playerId, const std::string &name);
 	void playerRequestRemoveVip(uint32_t playerId, uint32_t guid);
 	void playerRequestEditVip(uint32_t playerId, uint32_t guid, const std::string &description, uint32_t icon, bool notify, std::vector<uint8_t> vipGroupsId);
-	void playerApplyImbuement(uint32_t playerId, uint16_t imbuementid, uint8_t slot, bool protectionCharm);
+	void playerApplyImbuement(uint32_t playerId, uint16_t imbuementid, uint8_t slot);
 	void playerClearImbuement(uint32_t playerid, uint8_t slot);
 	void playerCloseImbuementWindow(uint32_t playerid);
 	void playerTurn(uint32_t playerId, Direction dir);
@@ -648,7 +653,7 @@ public:
 	}
 
 	void playerInspectItem(const std::shared_ptr<Player> &player, const Position &pos);
-	void playerInspectItem(const std::shared_ptr<Player> &player, uint16_t itemId, uint8_t itemCount, bool cyclopedia);
+	void playerInspectItem(const std::shared_ptr<Player> &player, uint16_t itemId, uint8_t itemCount, uint8_t inspectionType);
 
 	void addCharmRune(const std::shared_ptr<Charm> &charm) {
 		CharmList.push_back(charm);
@@ -733,6 +738,9 @@ public:
 	std::unique_ptr<IOWheel> &getIOWheel();
 	const std::unique_ptr<IOWheel> &getIOWheel() const;
 
+	std::unique_ptr<AttachedEffects> &getAttachedEffects();
+	const std::unique_ptr<AttachedEffects> &getAttachedEffects() const;
+
 	void setTransferPlayerHouseItems(uint32_t houseId, uint32_t playerId);
 	void transferHouseItemsToDepot();
 
@@ -760,6 +768,11 @@ public:
 	const std::map<uint8_t, std::string> &getBlessingNames();
 	const std::unordered_map<uint16_t, std::string> &getHirelingSkills();
 	const std::unordered_map<uint16_t, std::string> &getHirelingOutfits();
+	void sendAttachedEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId);
+	void sendDetachEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId);
+	void updateCreatureShader(const std::shared_ptr<Creature> &creature);
+	void playerSetTyping(uint32_t playerId, uint8_t typing);
+	void refreshItem(const std::shared_ptr<Item> &item);
 
 private:
 	std::unordered_map<uint8_t, std::string> m_worldTypesNames;
@@ -917,6 +930,8 @@ private:
 	// (1440 total light of tibian day)/(3600 real seconds each tibian day) * 10 seconds event interval
 	int32_t lightHourDelta = (LIGHT_DAY_LENGTH * (EVENT_LIGHTINTERVAL_MS / 1000)) / DAY_LENGTH_SECONDS;
 
+	uint64_t lastMapLoadTime = 0;
+
 	ServiceManager* serviceManager = nullptr;
 
 	void updatePlayersRecord() const;
@@ -975,6 +990,8 @@ private:
 	std::unique_ptr<IOWheel> m_IOWheel;
 	Worlds m_worlds = {};
 
+	std::unique_ptr<AttachedEffects> m_attachedEffects;
+
 	void cacheQueryHighscore(const std::string &key, const std::string &query, uint32_t page, uint8_t entriesPerPage);
 	void processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage, const std::string &selectedWorld);
 
@@ -984,6 +1001,7 @@ private:
 	std::string generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
 	std::string generateHighscoreOrGetCachedQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation);
 
+	bool hasPartyMembersNearby(const std::shared_ptr<Player> &player);
 	bool isPlayerNoBoxed(const std::shared_ptr<Player> &player);
 };
 

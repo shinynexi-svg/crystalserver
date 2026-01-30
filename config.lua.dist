@@ -531,10 +531,8 @@ logPlayersStatements = false
 
 -- Chain system
 -- NOTE: combatChainDelay: set to minimum 50 miliseconds
--- NOTE: chainSystemModifyMagic will increase power of wands and rods based on player magic level
 toggleChainSystem = false
 chainSystemVipOnly = true
-chainSystemModifyMagic = false
 combatChainDelay = 50
 combatChainTargets = 5
 combatChainSkillFormulaFist = 1.0
@@ -701,3 +699,17 @@ metricsPrometheusAddress = "0.0.0.0:9464"
 --- OStream
 metricsEnableOstream = false
 metricsOstreamInterval = 1000
+
+-- OTC Features
+-- NOTE: Features added in this list will be forced to be used on OTCR
+-- These features can be found in "modules/gamelib/const.lua"
+OTCRFeatures = {
+    enableFeature = { 
+        101, -- g_game.enableFeature(GameItemShader)
+        102, -- g_game.enableFeature(GameCreatureAttachedEffect)
+        103, -- g_game.enableFeature(GameCreatureShader)
+        118  -- g_game.enableFeature(GameWingsAurasEffectsShader)
+    },
+    disableFeature = {
+    }
+}
