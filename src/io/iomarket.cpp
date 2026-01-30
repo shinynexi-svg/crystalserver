@@ -280,7 +280,7 @@ MarketOfferEx IOMarket::getOfferByCounter(uint32_t timestamp, uint16_t counter) 
 	const int32_t created = timestamp - g_configManager().getNumber(MARKET_OFFER_DURATION);
 
 	std::string query = fmt::format(
-		"SELECT `id`, `sale`, `itemtype`, `amount`, `created`, `price`, `player_id`, `anonymous`, `tier`, (SELECT `name` FROM `players` WHERE `id` = `player_id`) AS `player_name` FROM `market_offers` WHERE `created` = {} AND ((`id` ^ 0xABCDEF) & 65535) = {} AND `world_id` = {} LIMIT 1",
+		"SELECT `id`, `sale`, `itemtype`, `amount`, `created`, `price`, `player_id`, `anonymous`, `tier`, (SELECT `name` FROM `players` WHERE `id` = `player_id`) AS `player_name` FROM `market_offers` WHERE `created` = {} AND (`id` & 65535) = {} AND `world_id` = {} LIMIT 1",
 		created, counter, g_game().worlds().getCurrentWorld()->id
 	);
 
