@@ -2613,6 +2613,7 @@ Storage = {
 					Fragrance = 46016,
 				},
 				FalconBastion = {
+					Access = 46117,
 					Questline = 46017,
 					KillingBosses = 46018,
 					OberonTimer = 46019,
@@ -2889,6 +2890,17 @@ Storage = {
 					Serenity = 290135,
 					Eternity = 290136,
 				},
+			},
+		},
+		U15_10 = { -- update 15.10 - Reserved Storages 48000 - 48030
+			BloodyTusks = {
+				Questline = 48000,
+				IntoTheGrave = 48001,
+				ThroughTheMist = 48002,
+				TheWrathOfTheAncestorst = 48003,
+				DanceOfDeath = 48004,
+				TheNextStep = 48005,
+				Bloodbath = 48006,
 			},
 		},
 	},

@@ -281,8 +281,8 @@ enum ImbuementTypes_t : int64_t {
 	IMBUEMENT_SKILLBOOST_DISTANCE = 15,
 	IMBUEMENT_SKILLBOOST_MAGIC_LEVEL = 16,
 	IMBUEMENT_INCREASE_CAPACITY = 17,
-	IMBUEMENT_PARALYSIS_REMOVAL = 18,
-	IMBUEMENT_SKILLBOOST_FIST = 19
+	IMBUEMENT_SKILLBOOST_FIST = 18,
+	IMBUEMENT_PARALYSIS_REMOVAL = 19
 };
 
 enum class Augment_t : uint8_t {
@@ -293,6 +293,7 @@ enum class Augment_t : uint8_t {
 	IncreasedDamage,
 	Cooldown,
 	CriticalExtraDamage,
+	CriticalHitChance,
 	LifeLeech,
 	ManaLeech
 };

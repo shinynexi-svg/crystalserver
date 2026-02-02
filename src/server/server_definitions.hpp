@@ -91,7 +91,8 @@ enum InspectObjectTypes : uint8_t {
 	INSPECT_NORMALOBJECT = 0,
 	INSPECT_NPCTRADE = 1,
 	INSPECT_PLAYERTRADE = 2,
-	INSPECT_CYCLOPEDIA = 3
+	INSPECT_CYCLOPEDIA = 3,
+	INSPECT_PROFICIENCY = 4,
 };
 
 enum CyclopediaCharacterInfo_OutfitType_t : uint8_t {
@@ -149,4 +150,17 @@ struct HighscoreCharacter {
 	uint16_t level;
 	uint8_t vocation;
 	std::string loyaltyTitle;
+};
+
+enum Imbuement_Window_t : uint8_t {
+	IMBUEMENT_WINDOW_CHOICE = 0,
+	IMBUEMENT_WINDOW_SELECT_ITEM = 1,
+	IMBUEMENT_WINDOW_SCROLL = 2
+};
+
+enum WeaponProficiency_t : uint8_t {
+	WEAPON_PROFICIENCY_ITEM_INFO = 0,
+	WEAPON_PROFICIENCY_LIST_INFO = 1,
+	WEAPON_PROFICIENCY_RESET_PERKS = 2,
+	WEAPON_PROFICIENCY_APPLY_PERKS = 3
 };

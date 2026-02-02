@@ -24,6 +24,7 @@
 #include "lua/creature/movement.hpp"
 #include "utils/pugicast.hpp"
 #include "creatures/combat/spells.hpp"
+#include "creatures/monsters/monsters.hpp"
 #include "utils/tools.hpp"
 
 #include <appearances.pb.h>
@@ -116,10 +117,12 @@ std::string ItemType::getFormattedAugmentDescription(const std::shared_ptr<Augme
 		return fmt::format("{} -> {}{}s {}", augmentSpellNameCapitalized, signal, augmentInfo->value / 1000, augmentName);
 	} else if (augmentInfo->type == Augment_t::Base) {
 		const auto &spell = g_spells().getSpellByName(augmentInfo->spellName);
-		return fmt::format("{} -> {:+}% {} {}", augmentSpellNameCapitalized, augmentInfo->value, augmentName, spell ? (spell->getGroup() == SPELLGROUP_HEALING ? "healing" : "damage") : "unknown");
+		const double percent = augmentInfo->value / 100.0;
+		return fmt::format("{} -> {:+}% {} {}", augmentSpellNameCapitalized, percent, augmentName, spell ? (spell->getGroup() == SPELLGROUP_HEALING ? "healing" : "damage") : "unknown");
 	}
 
-	return fmt::format("{} -> {:+}% {}", augmentSpellNameCapitalized, augmentInfo->value, augmentName);
+	const double percent = augmentInfo->value / 100.0;
+	return fmt::format("{} -> {:+}% {}", augmentSpellNameCapitalized, percent, augmentName);
 }
 
 void ItemType::addAugment(std::string spellName, Augment_t augmentType, int32_t value) {
@@ -144,6 +147,8 @@ bool Items::reload() {
 
 void Items::loadFromProtobuf() {
 	using namespace Crystal::protobuf::appearances;
+
+	uint16_t countProficiencyItems = 0;
 
 	bool supportAnimation = g_configManager().getBoolean(OLD_PROTOCOL);
 	for (uint32_t it = 0; it < g_game().m_appearancesPtr->object_size(); ++it) {
@@ -250,11 +255,21 @@ void Items::loadFromProtobuf() {
 		iType.expire = object.flags().expire();
 		iType.expireStop = object.flags().expirestop();
 		iType.isWrapKit = object.flags().wrapkit();
+		iType.isDualWielding = object.flags().dual_wielding();
+
+		if (object.flags().proficiency().has_proficiency_id()) {
+			iType.proficiencyId = static_cast<uint32_t>(object.flags().proficiency().proficiency_id());
+			countProficiencyItems++;
+		} else {
+			iType.proficiencyId = 0;
+		}
 
 		if (!iType.name.empty()) {
 			nameToItems.insert({ asLowerCaseString(iType.name), iType.id });
 		}
 	}
+
+	g_logger().info("Loaded {} items with proficiency.", countProficiencyItems);
 
 	items.shrink_to_fit();
 }
@@ -372,7 +387,12 @@ bool Items::loadFromXml() {
 				monsterRaceId = pugi::cast<uint32_t>(monsterRaceIdAttr.value());
 			}
 
-			setItemBag(itemId, itemName, chance, minAmount, maxAmount, monsterClass, monsterRaceId);
+			bool bossOnly = false;
+			if (const auto bossOnlyAttr = nodeBags.attribute("bossOnly")) {
+				bossOnly = bossOnlyAttr.as_bool();
+			}
+
+			setItemBag(itemId, itemName, chance, minAmount, maxAmount, monsterClass, monsterRaceId, bossOnly);
 		}
 	}
 
@@ -489,7 +509,7 @@ bool Items::hasItemType(size_t hasId) const {
 	return false;
 }
 
-void Items::setItemBag(uint16_t itemId, const std::string &itemName, double chance, uint32_t minAmount, uint32_t maxAmount, const std::string &monsterClass, uint32_t monsterRaceId) {
+void Items::setItemBag(uint16_t itemId, const std::string &itemName, double chance, uint32_t minAmount, uint32_t maxAmount, const std::string &monsterClass, uint32_t monsterRaceId, bool bossOnly) {
 	BagItemInfo itemInfo;
 	itemInfo.name = itemName;
 	itemInfo.id = itemId;
@@ -498,7 +518,61 @@ void Items::setItemBag(uint16_t itemId, const std::string &itemName, double chan
 	itemInfo.maxAmount = maxAmount;
 	itemInfo.monsterClass = monsterClass;
 	itemInfo.monsterRaceId = monsterRaceId;
+	itemInfo.bossOnly = bossOnly;
 	bagItems[itemId] = itemInfo;
+}
+
+std::vector<Items::SurpriseBagDrop> Items::rollSurpriseBagLoot(const std::shared_ptr<MonsterType> &monsterType) const {
+	std::vector<SurpriseBagDrop> drops;
+	if (!g_configManager().getBoolean(SURPRISE_BAGS)) {
+		return drops;
+	}
+
+	if (!monsterType) {
+		return drops;
+	}
+
+	const bool isBoss = monsterType->isBoss();
+	const uint16_t raceId = monsterType->info.raceid;
+	const std::string monsterClass = asLowerCaseString(monsterType->info.bestiaryClass);
+
+	for (const auto &[_, bagItem] : bagItems) {
+		if (bagItem.chance <= 0) {
+			continue;
+		}
+
+		if (isBoss && !bagItem.bossOnly) {
+			continue;
+		}
+
+		if (bagItem.bossOnly && !isBoss) {
+			continue;
+		}
+
+		if (bagItem.monsterRaceId != 0 && bagItem.monsterRaceId != raceId) {
+			continue;
+		}
+
+		if (!bagItem.monsterClass.empty() && monsterClass != asLowerCaseString(bagItem.monsterClass)) {
+			continue;
+		}
+
+		double randomChance = normal_random(0, 100);
+		if (randomChance > bagItem.chance) {
+			continue;
+		}
+
+		const uint32_t minAmount = std::max<uint32_t>(1, bagItem.minAmount);
+		const uint32_t maxAmount = std::max<uint32_t>(minAmount, bagItem.maxAmount);
+		uint16_t dropAmount = static_cast<uint16_t>(normal_random(minAmount, maxAmount));
+		if (dropAmount == 0) {
+			dropAmount = 1;
+		}
+
+		drops.push_back({ bagItem.id, dropAmount });
+	}
+
+	return drops;
 }
 
 uint32_t Abilities::getHealthGain() const {

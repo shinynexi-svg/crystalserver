@@ -141,7 +141,6 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TELEPORT_SUMMONS, "teleportSummons", false);
 	loadBoolConfig(L, TOGGLE_ATTACK_SPEED_ONFIST, "toggleAttackSpeedOnFist", false);
 	loadBoolConfig(L, TOGGLE_CHAIN_SYSTEM, "toggleChainSystem", true);
-	loadBoolConfig(L, CHAIN_SYSTEM_MODIFY_MAGIC, "chainSystemModifyMagic", false);
 	loadBoolConfig(L, TOGGLE_FREE_QUEST, "toggleFreeQuest", true);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_ALLOW_ANYTHING, "toggleGoldPouchAllowAnything", false);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_QUICKLOOT_ONLY, "toggleGoldPouchQuickLootOnly", false);
@@ -187,6 +186,8 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_EXPERT_PVP, "toggleExpertPvp", false);
 	loadBoolConfig(L, EXPERT_PVP_CANWALKTHROUGHOTHERPLAYERS, "canWalkThroughOtherPlayers", false);
 	loadBoolConfig(L, EXPERT_PVP_CANWALKTHROUGHMAGICWALLS, "canWalkThroughMagicWalls", false);
+	loadBoolConfig(L, INGAME_GUILD_MANAGEMENT, "ingameGuildManagement", true);
+	loadBoolConfig(L, CREATE_GUILD_ONLY_PREMIUM, "createGuildOnlyPremium", true);
 
 	loadFloatConfig(L, BESTIARY_RATE_CHARM_SHOP_PRICE, "bestiaryRateCharmShopPrice", 1.0);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_AXE, "combatChainSkillFormulaAxe", 0.9);
@@ -412,6 +413,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, STASH_MANAGE_AMOUNT, "stashManageAmount", 100000);
 	loadIntConfig(L, GUILD_WARS_MINIMUM_FRAGS, "guildWarsMinimunFrags", 10);
 	loadIntConfig(L, GUILD_WARS_DEFAULT_FRAGS, "guildWarsDefaultFrags", 100);
+	loadIntConfig(L, LEVEL_TO_FORM_GUILD, "levelToFormGuild", 8);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");
@@ -433,6 +435,8 @@ bool ConfigManager::load() {
 	loadStringConfig(L, URL, "url", "");
 	loadStringConfig(L, WORLD_TYPE, "worldType", "pvp");
 	loadStringConfig(L, LOGLEVEL, "logLevel", "info");
+
+	loadLuaOTCFeatures(L);
 
 	loaded = true;
 	lua_close(L);
@@ -534,4 +538,50 @@ float ConfigManager::getFloat(const ConfigKey_t &key, const std::source_location
 	}
 	g_logger().warn("[{}] accessing invalid or wrong type index: {}[{}]. Called line: {}:{}, in {}", __FUNCTION__, magic_enum::enum_name(key), fmt::underlying(key), location.line(), location.column(), location.function_name());
 	return 0.0f;
+}
+
+void ConfigManager::loadLuaOTCFeatures(lua_State* L) {
+	lua_getglobal(L, "OTCRFeatures");
+	if (!lua_istable(L, -1)) {
+		// Temp to avoid a bug in OTC if the "OTCRFeatures" array is not declared in config.lua.
+		enabledFeaturesOTC.push_back(101);
+		enabledFeaturesOTC.push_back(102);
+		enabledFeaturesOTC.push_back(103);
+		enabledFeaturesOTC.push_back(118);
+		lua_pop(L, 1);
+		return;
+	}
+
+	lua_pushstring(L, "enableFeature");
+	lua_gettable(L, -2);
+	if (lua_istable(L, -1)) {
+		lua_pushnil(L);
+		while (lua_next(L, -2) != 0) {
+			const auto feature = static_cast<uint8_t>(lua_tointeger(L, -1));
+			enabledFeaturesOTC.push_back(feature);
+			lua_pop(L, 1);
+		}
+	}
+	lua_pop(L, 1);
+
+	lua_pushstring(L, "disableFeature");
+	lua_gettable(L, -2);
+	if (lua_istable(L, -1)) {
+		lua_pushnil(L);
+		while (lua_next(L, -2) != 0) {
+			const auto feature = static_cast<uint8_t>(lua_tointeger(L, -1));
+			disabledFeaturesOTC.push_back(feature);
+			lua_pop(L, 1);
+		}
+	}
+	lua_pop(L, 1);
+
+	lua_pop(L, 1);
+}
+OTCFeatures ConfigManager::getEnabledFeaturesOTC() const {
+	return enabledFeaturesOTC;
+}
+
+OTCFeatures ConfigManager::getDisabledFeaturesOTC() const {
+	return disabledFeaturesOTC;
 }
