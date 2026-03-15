@@ -1,9 +1,4 @@
 function onUpdateDatabase()
-	logger.info("Updating database to version 60 (player binary save/load)")
-	db.query("ALTER TABLE `players` ADD `spells` blob DEFAULT NULL")
-	db.query("ALTER TABLE `players` ADD `storages` mediumblob DEFAULT NULL")
-	db.query("ALTER TABLE `players` ADD `items` longblob DEFAULT NULL")
-	db.query("ALTER TABLE `players` ADD `depotitems` longblob DEFAULT NULL")
-	db.query("ALTER TABLE `players` ADD `inboxitems` longblob DEFAULT NULL")
-	db.query("ALTER TABLE `players` ADD `stashitems` longblob DEFAULT NULL")
+	logger.info("Updating database to version 60 (rename tracker_list column)")
+	db.query("ALTER TABLE `player_charms` CHANGE COLUMN `tracker list` `tracker_list` BLOB NULL")
 end

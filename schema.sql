@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
     CONSTRAINT `server_config_pk` PRIMARY KEY (`config`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '59'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
+INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '60'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `account_vipgroups` (
     `account_id` int(11) UNSIGNED NOT NULL COMMENT 'id of account whose vip group entry it is',
     `name` varchar(128) NOT NULL,
     `customizable` BOOLEAN NOT NULL DEFAULT '1',
-    CONSTRAINT `account_vipgroups_pk` PRIMARY KEY (`id`, `account_id`),
+    CONSTRAINT `account_vipgroups_pk` PRIMARY KEY (`id`),
     CONSTRAINT `account_vipgroups_accounts_fk`
         FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
         ON DELETE CASCADE
@@ -582,7 +582,7 @@ CREATE TABLE IF NOT EXISTS `player_charms` (
     `UsedRunesBit` INT NOT NULL DEFAULT '0',
     `UnlockedRunesBit` INT NOT NULL DEFAULT '0',
     `charms` BLOB NULL,
-    `tracker list` BLOB NULL,
+    `tracker_list` BLOB NULL,
     CONSTRAINT `player_charms_players_fk`
         FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;

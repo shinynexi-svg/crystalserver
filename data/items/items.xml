@@ -4344,65 +4344,38 @@
 		</attribute>
 	</item>
 	<item id="2131" article="a" name="fire field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="fire">
-			<attribute key="ticks" value="10000" />
-			<attribute key="count" value="7" />
-			<attribute key="damage" value="20" />
-		</attribute>
+		<attribute key="field" value="fire" />
 		<attribute key="duration" value="120" />
 		<attribute key="decayTo" value="2132" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2132" article="a" name="fire field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="fire">
-			<attribute key="ticks" value="10000" />
-			<attribute key="count" value="7" />
-			<attribute key="damage" value="10" />
-		</attribute>
+		<attribute key="field" value="fire" />
 		<attribute key="duration" value="120" />
 		<attribute key="decayTo" value="2133" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2133" article="a" name="fire field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
 		<attribute key="field" value="fire" />
 		<attribute key="duration" value="120" />
 		<attribute key="decayTo" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2134" article="a" name="poison gas">
 		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="poison">
-			<attribute key="ticks" value="5000" />
-			<attribute key="damage" value="100" />
-			<attribute key="start" value="5" />
-		</attribute>
+		<attribute key="field" value="poison"/>
 		<attribute key="duration" value="120" />
 		<attribute key="decayTo" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2135" article="an" name="energy field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="energy">
-			<attribute key="ticks" value="10000" />
-			<attribute key="damage" value="25" />
-		</attribute>
 		<attribute key="duration" value="120" />
 		<attribute key="decayTo" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2136" name="smoke">
 		<attribute key="primarytype" value="fields" />
@@ -7916,7 +7889,7 @@
 		<attribute key="charges" value="1" />
 		<attribute key="weight" value="210" />
 	</item>
-	<item id="3204" article="a" name="dead human" />
+	<item id="3204" name="your own dead body" />
 	<item id="3205" article="a" name="family brooch">
 		<attribute key="primarytype" value="quest items" />
 		<attribute key="description" value="You see the familyname Windtrouser engraved on this brooch" />
@@ -10808,7 +10781,6 @@
 	</item>
 	<item id="3454" article="a" name="broom">
 		<attribute key="primarytype" value="tools" />
-		<attribute key="description" value="Don't use it without flying license. Not suitable for minors." />
 		<attribute key="weight" value="1100" />
 	</item>
 	<item id="3455" article="a" name="hoe">
@@ -13974,14 +13946,7 @@
 		<attribute key="effect" value="bluebubble" />
 	</item>
 	<item fromid="4603" toid="4608" name="grass" />
-	<item fromid="4609" toid="4611" name="shallow water">
-		<attribute key="primarytype" value="natural tiles" />
-		<attribute key="description" value="You see the silvery movement of fish." />
-		<attribute key="fluidsource" value="water" />
-		<attribute key="type" value="trashholder" />
-		<attribute key="effect" value="bluebubble" />
-	</item>
-	<item id="4612" name="shallow water">
+	<item id="4609" name="shallow water">
 		<attribute key="primarytype" value="natural tiles" />
 		<attribute key="fluidsource" value="water" />
 		<attribute key="type" value="trashholder" />
@@ -13989,7 +13954,7 @@
 		<attribute key="duration" value="1200" />
 		<attribute key="decayTo" value="4597" />
 	</item>
-	<item id="4613" name="shallow water">
+	<item id="4610" name="shallow water">
 		<attribute key="primarytype" value="natural tiles" />
 		<attribute key="fluidsource" value="water" />
 		<attribute key="type" value="trashholder" />
@@ -13997,13 +13962,37 @@
 		<attribute key="duration" value="1200" />
 		<attribute key="decayTo" value="4598" />
 	</item>
-	<item id="4614" name="shallow water">
+	<item id="4611" name="shallow water">
 		<attribute key="primarytype" value="natural tiles" />
 		<attribute key="fluidsource" value="water" />
 		<attribute key="type" value="trashholder" />
 		<attribute key="effect" value="bluebubble" />
 		<attribute key="duration" value="1200" />
 		<attribute key="decayTo" value="4599" />
+	</item>
+	<item id="4612" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="4600" />
+	</item>
+	<item id="4613" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="4601" />
+	</item>
+		<item id="4614" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="4602" />
 	</item>
 	<item fromid="4621" toid="4632" name="shallow water">
 		<attribute key="primarytype" value="natural tiles" />
@@ -14038,11 +14027,53 @@
 	</item>
 	<item fromid="4773" toid="4784" name="grass" />
 	<item fromid="4785" toid="4808" name="dirt" />
-	<item fromid="4809" toid="4814" name="shallow water">
+	<item id="4809" name="shallow water">
 		<attribute key="primarytype" value="natural tiles" />
 		<attribute key="fluidsource" value="water" />
 		<attribute key="type" value="trashholder" />
 		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="629" />	
+	</item>
+	<item id="4810" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="630" />	
+	</item>
+	<item id="4811" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="631" />	
+	</item>
+	<item id="4812" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="632" />	
+	</item>
+	<item id="4813" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="633" />	
+	</item>
+	<item id="4814" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="634" />	
 	</item>
 	<item fromid="4815" toid="4816" article="a" name="mountain">
 		<attribute key="primarytype" value="rocks" />
@@ -42239,10 +42270,25 @@
 		<attribute key="description" value="This printout is nearly unreadable. One column of numbers on it is followed by the word: Doubleday" />
 		<attribute key="weight" value="50" />
 	</item>
-	<item fromid="21302" toid="21322" name="shallow water">
+	<item fromid="21302" toid="21313" name="shallow water">
 		<attribute key="primarytype" value="natural tiles" />
 		<attribute key="fluidsource" value="water" />
 		<attribute key="effect" value="bluebubble" />
+		<attribute key="type" value="trashholder" />
+	</item>
+	<item id="21314" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="21312" />
+	</item>	
+	<item fromid="21315" toid="21322" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="type" value="trashholder" />
 	</item>
 	<item id="21323" article="an" name="imported water pipe">
 		<attribute key="primarytype" value="utilities" />
@@ -42615,26 +42661,10 @@
 		<attribute key="decayTo" value="0" />
 	</item>
 	<item fromid="21458" toid="21461" name="RESERVED SPRITE" />
-	<item id="21462" article="a" name="fire field" />
-	<item id="21463" article="a" name="magic field" />
-	<item id="21464" article="a" name="flame of life">
-		<attribute key="showduration" value="1" />
-		<attribute key="duration" value="600" />
-		<attribute key="decayTo" value="7359" />
-	</item>
-	<item id="21465" article="a" name="fire field">
-		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="fire">
-			<attribute key="ticks" value="10000" />
-			<attribute key="count" value="7" />
-			<attribute key="damage" value="10" />
-		</attribute>
-		<attribute key="duration" value="120" />
-		<attribute key="decayTo" value="2132" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
-	</item>
+	<item id="21462" article="a" name="red flame" />
+	<item id="21463" article="a" name="blue flame" />
+	<item id="21464" article="a" name="violet flame"/>
+	<item id="21465" article="a" name="yellow flame" />
 	<item id="21466" name="ewer with holy water">
 		<attribute key="description" value="The water in the ewer shimmers faintly. In the desert's heat it will evaporate soon, however" />
 		<attribute key="weight" value="1750" />
@@ -57766,7 +57796,7 @@
 	<item fromid="31153" toid="31156" name="hanging Sun disk" />
 	<item id="31157" article="a" name="wall lamp" />
 	<item id="31158" article="a" name="lit wall lamp" />
-	<item id="31159" name="RESERVED SPRITE" />
+	<item id="31159" name="grass" />
 	<item id="31160" article="a" name="cleansed soul splinter">
 		<attribute key="primarytype" value="quest objects" />
 	</item>
@@ -74977,6 +75007,17 @@
 	<item id="43134" name="stairs">
 		<attribute key="floorchange" value="south" />
 	</item>
+	<item fromid="43786" toid="43790" name="spore reservoir"/>
+	<item id="43294" article="a" name="spore tracks" >
+		<attribute key="primarytype" value="magicfield"/>
+		<attribute key="duration" value="3"/>
+		<attribute key="decayTo" value="43295"/>
+	</item>
+	<item id="43295" article="a" name="volatile funghi" >
+		<attribute key="primarytype" value="magicfield"/>
+		<attribute key="duration" value="3"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
 	<item id="43297" article="a" name="agony field">
 		<attribute key="type" value="magicfield" />
 		<attribute key="decayTo" value="0" />
@@ -76297,6 +76338,9 @@
 	<item id="43900" article="a" name="darklight geode">
 		<attribute key="description" value="A geode pulsating with darklight energy." />
 		<attribute key="primarytype" value="quest items" />
+	</item>
+	<item id="43901" article="a" name="toy ball">
+		<attribute key="weight" value="150" />
 	</item>
 	<item id="43902" article="a" name="crack">
 		<attribute key="description" value="You see to be able to fit through there" />
@@ -81856,8 +81900,6 @@
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="ammotype" value="arrow" />
 		<attribute key="absorbpercentearth" value="5" />
-		<attribute key="criticalhitdamage" value="5800" />
-		<attribute key="criticalhitchance" value="1000" />
 		<attribute key="skilldist" value="2" />
 		<attribute key="hitchance" value="5" />
 		<attribute key="range" value="6" />
@@ -81881,8 +81923,6 @@
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="ammotype" value="arrow" />
 		<attribute key="absorbpercentearth" value="5" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="skilldist" value="2" />
 		<attribute key="hitchance" value="5" />
 		<attribute key="range" value="6" />
@@ -81906,8 +81946,6 @@
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="ammotype" value="arrow" />
 		<attribute key="absorbpercentearth" value="5" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
 		<attribute key="skilldist" value="2" />
 		<attribute key="hitchance" value="5" />
 		<attribute key="range" value="6" />
@@ -81936,8 +81974,6 @@
 		<attribute key="range" value="6" />
 		<attribute key="attack" value="8" />
 		<attribute key="weight" value="5900" />
-		<attribute key="criticalhitdamage" value="5800" />
-		<attribute key="criticalhitchance" value="1000" />
 		<attribute key="imbuementslot" value="2">
 			<attribute key="life leech" value="3" />
 			<attribute key="mana leech" value="3" />
@@ -81961,8 +81997,6 @@
 		<attribute key="range" value="6" />
 		<attribute key="attack" value="8" />
 		<attribute key="weight" value="5900" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="imbuementslot" value="2">
 			<attribute key="critical hit" value="3" />
 			<attribute key="mana leech" value="3" />
@@ -81986,8 +82020,6 @@
 		<attribute key="range" value="6" />
 		<attribute key="attack" value="8" />
 		<attribute key="weight" value="5900" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
 		<attribute key="imbuementslot" value="2">
 			<attribute key="critical hit" value="3" />
 			<attribute key="life leech" value="3" />
@@ -82009,8 +82041,6 @@
 		<attribute key="defense" value="31" />
 		<attribute key="skillaxe" value="3" />
 		<attribute key="weight" value="6700" />
-		<attribute key="criticalhitchance" value="1000" />
-		<attribute key="criticalhitdamage" value="5800" />
 		<attribute key="weight" value="6400" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82034,8 +82064,6 @@
 		<attribute key="defense" value="31" />
 		<attribute key="skillaxe" value="3" />
 		<attribute key="weight" value="6700" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="weight" value="6400" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82059,8 +82087,6 @@
 		<attribute key="defense" value="31" />
 		<attribute key="skillaxe" value="3" />
 		<attribute key="weight" value="6700" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
 		<attribute key="weight" value="6400" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="life leech" value="3" />
@@ -82084,8 +82110,6 @@
 		<attribute key="defense" value="33" />
 		<attribute key="skillaxe" value="4" />
 		<attribute key="weight" value="8500" />
-		<attribute key="criticalhitchance" value="1000" />
-		<attribute key="criticalhitdamage" value="5800" />
 		<attribute key="weight" value="6400" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82109,8 +82133,6 @@
 		<attribute key="defense" value="33" />
 		<attribute key="skillaxe" value="4" />
 		<attribute key="weight" value="8500" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="weight" value="6400" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82134,9 +82156,6 @@
 		<attribute key="defense" value="33" />
 		<attribute key="skillaxe" value="4" />
 		<attribute key="weight" value="8500" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
-		<attribute key="weight" value="6400" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="life leech" value="3" />
 			<attribute key="critical hit" value="3" />
@@ -82158,8 +82177,6 @@
 		<attribute key="defense" value="31" />
 		<attribute key="extradef" value="3" />
 		<attribute key="skillclub" value="3" />
-		<attribute key="criticalhitchance" value="1000" />
-		<attribute key="criticalhitdamage" value="5800" />
 		<attribute key="weight" value="6500" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82182,8 +82199,6 @@
 		<attribute key="defense" value="31" />
 		<attribute key="extradef" value="3" />
 		<attribute key="skillclub" value="3" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="weight" value="6500" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82206,8 +82221,6 @@
 		<attribute key="defense" value="31" />
 		<attribute key="extradef" value="3" />
 		<attribute key="skillclub" value="3" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
 		<attribute key="weight" value="6500" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="life leech" value="3" />
@@ -82230,8 +82243,6 @@
 		<attribute key="elementice" value="48" />
 		<attribute key="defense" value="33" />
 		<attribute key="skillclub" value="4" />
-		<attribute key="criticalhitchance" value="1000" />
-		<attribute key="criticalhitdamage" value="5800" />
 		<attribute key="weight" value="8600" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82254,8 +82265,6 @@
 		<attribute key="elementice" value="48" />
 		<attribute key="defense" value="33" />
 		<attribute key="skillclub" value="4" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="weight" value="8600" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82278,8 +82287,6 @@
 		<attribute key="elementice" value="48" />
 		<attribute key="defense" value="33" />
 		<attribute key="skillclub" value="4" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
 		<attribute key="weight" value="8600" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="life leech" value="3" />
@@ -82302,8 +82309,6 @@
 		<attribute key="defense" value="31" />
 		<attribute key="extradef" value="3" />
 		<attribute key="skillsword" value="3" />
-		<attribute key="criticalhitchance" value="1000" />
-		<attribute key="criticalhitdamage" value="5800" />
 		<attribute key="weight" value="6400" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82326,8 +82331,6 @@
 		<attribute key="defense" value="31" />
 		<attribute key="extradef" value="3" />
 		<attribute key="skillsword" value="3" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="weight" value="6400" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82350,8 +82353,6 @@
 		<attribute key="defense" value="31" />
 		<attribute key="extradef" value="3" />
 		<attribute key="skillsword" value="3" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
 		<attribute key="weight" value="6400" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="life leech" value="3" />
@@ -82374,8 +82375,6 @@
 		<attribute key="elementenergy" value="48" />
 		<attribute key="defense" value="33" />
 		<attribute key="skillsword" value="4" />
-		<attribute key="criticalhitchance" value="1000" />
-		<attribute key="criticalhitdamage" value="5800" />
 		<attribute key="weight" value="8600" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82398,8 +82397,6 @@
 		<attribute key="elementenergy" value="48" />
 		<attribute key="defense" value="33" />
 		<attribute key="skillsword" value="4" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="weight" value="8600" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="mana leech" value="3" />
@@ -82422,8 +82419,6 @@
 		<attribute key="elementenergy" value="48" />
 		<attribute key="defense" value="33" />
 		<attribute key="skillsword" value="4" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
 		<attribute key="weight" value="8600" />
 		<attribute key="imbuementslot" value="1">
 			<attribute key="life leech" value="3" />
@@ -82445,8 +82440,6 @@
 		<attribute key="magiclevelpoints" value="3" />
 		<attribute key="firemagiclevelpoints" value="1" />
 		<attribute key="absorbpercentearth" value="5" />
-		<attribute key="criticalhitchance" value="1000" />
-		<attribute key="criticalhitdamage" value="5800" />
 		<attribute key="range" value="5" />
 		<attribute key="weight" value="2400" />
 		<attribute key="imbuementslot" value="1">
@@ -82473,8 +82466,6 @@
 		<attribute key="magiclevelpoints" value="3" />
 		<attribute key="firemagiclevelpoints" value="1" />
 		<attribute key="absorbpercentearth" value="5" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="range" value="5" />
 		<attribute key="weight" value="2400" />
 		<attribute key="imbuementslot" value="1">
@@ -82501,8 +82492,6 @@
 		<attribute key="magiclevelpoints" value="3" />
 		<attribute key="firemagiclevelpoints" value="1" />
 		<attribute key="absorbpercentearth" value="5" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
 		<attribute key="range" value="5" />
 		<attribute key="weight" value="2400" />
 		<attribute key="imbuementslot" value="1">
@@ -82529,8 +82518,6 @@
 		<attribute key="magiclevelpoints" value="3" />
 		<attribute key="earthmagiclevelpoints" value="1" />
 		<attribute key="absorbpercentdeath" value="5" />
-		<attribute key="criticalhitchance" value="1000" />
-		<attribute key="criticalhitdamage" value="5800" />
 		<attribute key="range" value="5" />
 		<attribute key="weight" value="2200" />
 		<attribute key="imbuementslot" value="1">
@@ -82557,8 +82544,6 @@
 		<attribute key="magiclevelpoints" value="3" />
 		<attribute key="earthmagiclevelpoints" value="1" />
 		<attribute key="absorbpercentdeath" value="5" />
-		<attribute key="lifeleechchance" value="10000" />
-		<attribute key="lifeleechamount" value="2900" />
 		<attribute key="range" value="5" />
 		<attribute key="weight" value="2200" />
 		<attribute key="imbuementslot" value="1">
@@ -82585,8 +82570,6 @@
 		<attribute key="magiclevelpoints" value="3" />
 		<attribute key="earthmagiclevelpoints" value="1" />
 		<attribute key="absorbpercentdeath" value="5" />
-		<attribute key="manaleechchance" value="10000" />
-		<attribute key="manaleechamount" value="1000" />
 		<attribute key="range" value="5" />
 		<attribute key="weight" value="2200" />
 		<attribute key="imbuementslot" value="1">
@@ -84008,6 +83991,7 @@
 		<attribute key="description" value="The traditional robe of a Merudri monk" />
 		<attribute key="primarytype" value="armors" />
 		<attribute key="armor" value="7" />
+		<attribute key="mantra" value="7" />
 		<attribute key="skillfist" value="1" />
 		<attribute key="weight" value="7000" />
 		<attribute key="script" value="moveevent">
@@ -84320,6 +84304,11 @@
 			<attribute key="mana leech" value="3" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost fist" value="3" />
+		</attribute>
+		<attribute key="augments" value="1">
+			<attribute key="greater tiger clash" value="base">
+				<attribute key="value" value="1200" />
+			</attribute>
 		</attribute>
 		<attribute key="weight" value="2900" />
 		<attribute key="script" value="moveevent;weapon">

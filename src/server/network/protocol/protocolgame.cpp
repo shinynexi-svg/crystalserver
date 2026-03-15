@@ -69,6 +69,8 @@
 #include "enums/player_cyclopedia.hpp"
 #include "enums/container_type.hpp"
 
+#include <memory>
+
 /*
  * NOTE: This namespace is used so that we can add functions without having to declare them in the ".hpp/.hpp" file
  * Do not use functions only in the .cpp scope without having a namespace, it may conflict with functions in other files of the same name
@@ -1027,9 +1029,17 @@ void ProtocolGame::disconnectClient(const std::string &message) const {
 }
 
 void ProtocolGame::writeToOutputBuffer(NetworkMessage &msg) {
-	g_dispatcher().safeCall([self = getThis(), msg = std::move(msg)] {
-		self->getOutputBuffer(msg.getLength())->append(msg);
-	});
+	if (g_dispatcher().context().isAsync()) {
+		auto msgPtr = std::make_shared<NetworkMessage>(msg);
+		g_dispatcher().addEvent(
+			[self = getThis(), msgPtr] {
+				self->getOutputBuffer(msgPtr->getLength())->append(*msgPtr);
+			},
+			__FUNCTION__
+		);
+	} else {
+		getOutputBuffer(msg.getLength())->append(msg);
+	}
 }
 
 void ProtocolGame::parsePacket(NetworkMessage &msg) {
@@ -2098,8 +2108,9 @@ void ProtocolGame::parseSay(NetworkMessage &msg) {
 			break;
 	}
 
-	const std::string text = msg.getString();
-	if (text.length() > 255) {
+	std::string text = msg.getString();
+	trimString(text);
+	if (text.empty() || text.length() > 255) {
 		return;
 	}
 
@@ -2265,10 +2276,10 @@ void ProtocolGame::parseInspectionObject(NetworkMessage &msg) {
 	if (inspectionType == INSPECT_NORMALOBJECT) {
 		Position pos = msg.getPosition();
 		g_game().playerInspectItem(player, pos);
-	} else if (inspectionType == INSPECT_NPCTRADE || inspectionType == INSPECT_CYCLOPEDIA) {
+	} else if (inspectionType == INSPECT_NPCTRADE || inspectionType == INSPECT_CYCLOPEDIA || inspectionType == INSPECT_PROFICIENCY) {
 		auto itemId = msg.get<uint16_t>();
 		uint16_t itemCount = msg.getByte();
-		g_game().playerInspectItem(player, itemId, static_cast<int8_t>(itemCount), (inspectionType == INSPECT_CYCLOPEDIA));
+		g_game().playerInspectItem(player, itemId, static_cast<int8_t>(itemCount), inspectionType);
 	}
 }
 
@@ -2282,7 +2293,7 @@ void ProtocolGame::sendSessionEndInformation(SessionEndInformations information)
 	disconnect();
 }
 
-void ProtocolGame::sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, bool cyclopedia) {
+void ProtocolGame::sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, uint8_t inspectionType) {
 	if (oldProtocol) {
 		return;
 	}
@@ -2290,7 +2301,13 @@ void ProtocolGame::sendItemInspection(uint16_t itemId, uint8_t itemCount, const 
 	NetworkMessage msg;
 	msg.addByte(0x76);
 	msg.addByte(0x00);
-	msg.addByte(cyclopedia ? 0x01 : 0x00);
+	if (inspectionType == INSPECT_CYCLOPEDIA) {
+		msg.addByte(0x01);
+	} else if (inspectionType == INSPECT_PROFICIENCY) {
+		msg.addByte(0x02);
+	} else {
+		msg.addByte(0x00);
+	}
 	msg.add<uint32_t>(player->getID()); // 13.00 Creature ID
 	msg.addByte(0x01);
 
@@ -5483,7 +5500,13 @@ void ProtocolGame::sendMarketEnter(uint32_t depotId) {
 
 	// Only use here locker items, itemVector is for use of Game::createMarketOffer
 	auto [itemVector, lockerItems] = player->requestLockerItems(depotLocker, true);
-	msg.add<uint16_t>(lockerItems.size());
+
+	uint16_t totalItems = 0;
+	for (const auto &entry : lockerItems) {
+		totalItems += entry.second.size();
+	}
+	msg.add<uint16_t>(totalItems);
+
 	for (const auto &[itemId, tierAndCountMap] : lockerItems) {
 		for (const auto &[tier, count] : tierAndCountMap) {
 			msg.add<uint16_t>(itemId);
@@ -9284,11 +9307,11 @@ void ProtocolGame::sendOpenStash() {
 
 	NetworkMessage msg;
 	msg.addByte(0x29);
-	StashItemList list = player->getStashItems();
+	const auto &list = player->getStashItems();
 	msg.add<uint16_t>(list.size());
-	for (auto item : list) {
-		msg.add<uint16_t>(item.first);
-		msg.add<uint32_t>(item.second);
+	for (const auto &[itemId, itemCount] : list) {
+		msg.add<uint16_t>(itemId);
+		msg.add<uint32_t>(itemCount);
 	}
 
 	writeToOutputBuffer(msg);
