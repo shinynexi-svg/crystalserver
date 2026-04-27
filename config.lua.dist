@@ -652,8 +652,10 @@ staminaGreenDelay = 5
 staminaPzGain = 1
 
 -- Mounts
+-- NOTE: set mountSounds to true will display onomatopoeia creature message from your selected mount
 playerAlwaysLoginMounted = false
 toggleMountInProtectionZone = false
+mountSounds = false
 
 -- Scripts
 warnUnsafeScripts = true
