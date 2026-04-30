@@ -25,21 +25,16 @@
 #endif
 
 struct Character {
-	Character() = default;
-	Character(uint64_t deletion, uint16_t worldId) :
-		deletion(deletion), worldId(worldId) { }
-
 	uint64_t deletion = 0;
-	uint16_t worldId = 0;
+	uint8_t worldId = 0;
 };
 
 struct AccountInfo {
-	~AccountInfo() = default;
 
 	uint32_t id = 0;
 	uint32_t premiumRemainingDays = 0;
 	time_t premiumLastDay = 0;
-	AccountType accountType = ACCOUNT_TYPE_NONE;
+	uint8_t accountType = 0;
 	phmap::flat_hash_map<std::string, Character> players;
 	bool oldProtocol = false;
 	time_t sessionExpires = 0;

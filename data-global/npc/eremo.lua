@@ -239,21 +239,50 @@ end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
 
+local node1 = keywordHandler:addKeyword({ "conjure wand of darkness" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {conjure wand of darkness} magic spell for 5000 gold?" })
+node1:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "conjure wand of darkness", vocation = { 1, 5 }, price = 5000, level = 41 })
+
+local node2 = keywordHandler:addKeyword({ "divine dazzle" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {divine dazzle} magic spell for 250000 gold?" })
+node2:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "divine dazzle", vocation = { 3, 7 }, price = 250000, level = 250 })
+
+local node3 = keywordHandler:addKeyword({ "wild growth rune" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {Wild Growth} Rune spell for 2000 gold?" })
+node3:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "wild growth rune", vocation = { 2, 6 }, price = 2000, level = 27 })
+
+local node4 = keywordHandler:addKeyword({ "challenge" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {challenge} magic spell for 2000 gold?" })
+node4:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "challenge", vocation = { 4, 8 }, price = 2000, level = 20 })
+
 keywordHandler:addKeyword({ "spells" }, StdModule.say, {
 	npcHandler = npcHandler,
-	text = "I can teach you these spells: {Challenge}, {Conjure Wand of Darkness}, {Divine Dazzle} and {Wild Growth Rune}.",
+	text = "I can teach you {attack} spells, {support} spells and spells for {runes}. What kind of spell do you wish to learn? I can also tell you which spells are available at your {level}.",
 })
 
-local node1 = keywordHandler:addKeyword({ "challenge" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {challenge} magic spell for 2000 gold?" })
-node1:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "challenge", vocation = { 4, 8 }, price = 2000, level = 20 })
+keywordHandler:addKeyword({ "attack" }, StdModule.say, {
+	npcHandler = npcHandler,
+	onlyFocus = true,
+	text = "My attack spells are: {Divine Dazzle}.",
+})
 
-local node2 = keywordHandler:addKeyword({ "conjure wand of darkness" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {conjure wand of darkness} magic spell for 5000 gold?" })
-node2:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "conjure wand of darkness", vocation = { 1, 5 }, price = 5000, level = 41 })
+keywordHandler:addKeyword({ "support" }, StdModule.say, {
+	npcHandler = npcHandler,
+	onlyFocus = true,
+	text = "My support spells are: {Challenge} and {Conjure Wand of Darkness}.",
+})
 
-local node3 = keywordHandler:addKeyword({ "divine dazzle" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {divine dazzle} magic spell for 250000 gold?" })
-node3:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "divine dazzle", vocation = { 3, 7 }, price = 250000, level = 250 })
+keywordHandler:addKeyword({ "runes" }, StdModule.say, {
+	npcHandler = npcHandler,
+	onlyFocus = true,
+	text = "My rune spells are: {Wild Growth} Rune.",
+})
 
-local node4 = keywordHandler:addKeyword({ "wild growth rune" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {wild growth rune} magic spell for 2000 gold?" })
-node4:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "wild growth rune", vocation = { 2, 6 }, price = 2000, level = 27 })
+local nodeLevels = keywordHandler:addKeyword({ "level" }, StdModule.say, {
+	npcHandler = npcHandler,
+	onlyFocus = true,
+	text = "I have spells for level {20}, {27}, {41} and {250}.",
+})
+
+nodeLevels:addChildKeyword({ "250" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "For level 250 I have {Divine Dazzle} for 250000 gold." })
+nodeLevels:addChildKeyword({ "41" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "For level 41 I have {Conjure Wand of Darkness} for 5000 gold." })
+nodeLevels:addChildKeyword({ "27" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "For level 27 I have {Wild Growth} Rune for 2000 gold." })
+nodeLevels:addChildKeyword({ "20" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "For level 20 I have {Challenge} for 2000 gold." })
 
 npcType:register(npcConfig)
