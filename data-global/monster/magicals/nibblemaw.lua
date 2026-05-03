@@ -13,8 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-}
+monster.events = {}
 
 monster.raceId = 2531
 monster.Bestiary = {
@@ -83,20 +82,20 @@ monster.voices = {
 }
 
 monster.loot = {
-    { name = "Gold Coin", chance = 100000, maxCount = 100 },
-    { name = "Platinum Coin", chance = 74190, maxCount = 6 },
-    { name = "Strong Health Potion", chance = 34320, maxCount = 1 },
-    { name = "Frazzle Tongue", chance = 10730, maxCount = 1 },
-    { name = "Frazzle Skin", chance = 7640, maxCount = 1 },
-    { name = "Onyx Chip", chance = 6809, maxCount = 3 },
-    { name = "Yellow Gem", chance = 5700, maxCount = 1 },
-    { name = "Gummy Rotworm", chance = 4830, maxCount = 2 },
-    { name = "Red Crystal Fragment", chance = 3440, maxCount = 1 },
-    { name = "Melon", chance = 1500, maxCount = 1 },
-    { name = "Raspberry", chance = 1270, maxCount = 2 },
-    { name = "Lime Tart", chance = 950, maxCount = 1 },
-    { name = "Dark Chocolate Coin", chance = 750, maxCount = 64 },
-    { name = "Assassin Dagger", chance = 440, maxCount = 1 }
+	{ name = "Gold Coin", chance = 100000, maxCount = 100 },
+	{ name = "Platinum Coin", chance = 74190, maxCount = 6 },
+	{ name = "Strong Health Potion", chance = 34320, maxCount = 1 },
+	{ name = "Frazzle Tongue", chance = 10730, maxCount = 1 },
+	{ name = "Frazzle Skin", chance = 7640, maxCount = 1 },
+	{ name = "Onyx Chip", chance = 6809, maxCount = 3 },
+	{ name = "Yellow Gem", chance = 5700, maxCount = 1 },
+	{ name = "Gummy Rotworm", chance = 4830, maxCount = 2 },
+	{ name = "Red Crystal Fragment", chance = 3440, maxCount = 1 },
+	{ name = "Melon", chance = 1500, maxCount = 1 },
+	{ name = "Raspberry", chance = 1270, maxCount = 2 },
+	{ name = "Lime Tart", chance = 950, maxCount = 1 },
+	{ name = "Dark Chocolate Coin", chance = 750, maxCount = 64 },
+	{ name = "Assassin Dagger", chance = 440, maxCount = 1 },
 }
 
 monster.attacks = {

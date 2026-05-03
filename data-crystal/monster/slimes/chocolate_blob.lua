@@ -67,8 +67,7 @@ monster.light = {
 	color = 0,
 }
 
-monster.summon = {
-}
+monster.summon = {}
 
 monster.voices = {
 	interval = 5000,

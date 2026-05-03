@@ -30510,8 +30510,34 @@
 		<attribute key="description" value="This fish, and rare ingredient, can only be found in the dirtiest, murkiest and muddiest of waters" />
 		<attribute key="weight" value="999" />
 	</item>
-	<item fromid="12558" toid="12563" name="dirty water">
+	<item id="12558" name="dirty water">
 		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="12561" />
+	</item>
+	<item id="12559" name="dirty water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="12562" />
+	</item>
+	<item id="12560" name="dirty water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="type" value="trashholder" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="12563" />
+	</item>
+	<item fromid="12561" toid="12563" name="dirty water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="type" value="trashholder" />
 	</item>
 	<item id="12570" article="a" name="fan doll of Queen Eloise">
 		<attribute key="weight" value="1560" />
@@ -31980,8 +32006,17 @@
 			<attribute key="weaponType" value="club" />
 		</attribute>
 	</item>
-	<item fromid="13988" toid="13989" name="shallow water">
+	<item id="13988" name="shallow water">
 		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="effect" value="bluebubble" />
+		<attribute key="duration" value="1200" />
+		<attribute key="decayTo" value="13989" />
+	</item>	
+	<item id="13989" name="shallow water">
+		<attribute key="primarytype" value="natural tiles" />
+		<attribute key="fluidsource" value="water" />
+		<attribute key="effect" value="bluebubble" />
 	</item>
 	<item id="13990" article="a" name="necklace of the deep">
 		<attribute key="showCharges" value="1" />

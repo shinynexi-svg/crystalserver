@@ -79,18 +79,18 @@ monster.voices = {
 }
 
 monster.loot = {
-    { name = "Gold Coin", chance = 100000, maxCount = 30 },
-    { name = "Platinum Coin", chance = 81910, maxCount = 6 },
-    { id = 281, chance = 6419, maxCount = 1 },
-    { id = 3039, chance = 5510, maxCount = 1 },
-    { name = "Energy Bar", chance = 5309, maxCount = 1 },
-    { name = "Black Shield", chance = 2730, maxCount = 1 },
-    { name = "Gummy Rotworm", chance = 2530, maxCount = 2 },
-    { name = "Wand of Decay", chance = 1620, maxCount = 1 },
-    { id = 3591, chance = 1310, maxCount = 4 },
-    { name = "Brigadeiro", chance = 1160, maxCount = 1 },
-    { name = "Violet Gem", chance = 810, maxCount = 1 },
-    { name = "Dark Chocolate Coin", chance = 510, maxCount = 11 }
+	{ name = "Gold Coin", chance = 100000, maxCount = 30 },
+	{ name = "Platinum Coin", chance = 81910, maxCount = 6 },
+	{ id = 281, chance = 6419, maxCount = 1 },
+	{ id = 3039, chance = 5510, maxCount = 1 },
+	{ name = "Energy Bar", chance = 5309, maxCount = 1 },
+	{ name = "Black Shield", chance = 2730, maxCount = 1 },
+	{ name = "Gummy Rotworm", chance = 2530, maxCount = 2 },
+	{ name = "Wand of Decay", chance = 1620, maxCount = 1 },
+	{ id = 3591, chance = 1310, maxCount = 4 },
+	{ name = "Brigadeiro", chance = 1160, maxCount = 1 },
+	{ name = "Violet Gem", chance = 810, maxCount = 1 },
+	{ name = "Dark Chocolate Coin", chance = 510, maxCount = 11 },
 }
 
 monster.attacks = {
