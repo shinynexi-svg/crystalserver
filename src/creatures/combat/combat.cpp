@@ -257,8 +257,11 @@ bool Combat::isPlayerCombat(const std::shared_ptr<Creature> &target) {
 		return true;
 	}
 
-	if (target->isSummon() && target->getMaster()->getPlayer()) {
-		return true;
+	if (target->isSummon()) {
+		const auto &master = target->getMaster();
+		if (master && master->getPlayer()) {
+			return true;
+		}
 	}
 
 	return false;
@@ -389,10 +392,12 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 		const auto &masterAttackerPlayer = attackerMaster ? attackerMaster->getPlayer() : nullptr;
 		const auto &masterAttackerMonster = attackerMaster ? attackerMaster->getMonster() : nullptr;
 		const auto &attackerPlayer = attacker->getPlayer();
+		const auto &effectiveAttackerPlayer = attackerPlayer ? attackerPlayer : masterAttackerPlayer;
 		const auto &attackerMonster = attacker->getMonster();
 		const auto &targetMonster = target ? target->getMonster() : nullptr;
 		const auto &targetMaster = target ? target->getMaster() : nullptr;
 		const auto &targetMasterPlayer = targetMaster ? targetMaster->getPlayer() : nullptr;
+		const auto &targetOwnerPlayer = target ? g_game().getOwnerPlayer(target) : nullptr;
 		if (targetPlayer) {
 			if (targetPlayer->hasFlag(PlayerFlags_t::CannotBeAttacked)) {
 				return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
@@ -456,10 +461,10 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 					return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 				}
 
-				if (g_game().getOwnerPlayer(target)) {
+				if (targetOwnerPlayer) {
 					if (target->getZoneType() == ZONE_NOPVP) {
 						return RETURNVALUE_ACTIONNOTPERMITTEDINANOPVPZONE;
-					} else if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP) && isProtected(attackerPlayer, targetPlayer)) {
+					} else if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP) && effectiveAttackerPlayer && isProtected(effectiveAttackerPlayer, targetOwnerPlayer)) {
 						return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 					} else if (!attackerPlayer->canCombat(target)) {
 						return RETURNVALUE_ADJUSTYOURCOMBAT;
@@ -471,12 +476,12 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 						return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 					}
 				} else if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
-					if (g_game().getOwnerPlayer(target)) {
+					if (targetOwnerPlayer) {
 						if (target->getZoneType() == ZONE_NOPVP) {
 							return RETURNVALUE_ACTIONNOTPERMITTEDINANOPVPZONE;
-						} else if (isProtected(attackerPlayer, targetPlayer)) {
+						} else if (effectiveAttackerPlayer && isProtected(effectiveAttackerPlayer, targetOwnerPlayer)) {
 							return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
-						} else if (!attackerPlayer->canCombat(target)) {
+						} else if (effectiveAttackerPlayer && !effectiveAttackerPlayer->canCombat(target)) {
 							return RETURNVALUE_ADJUSTYOURCOMBAT;
 						}
 					}
