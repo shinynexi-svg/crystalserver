@@ -18,6 +18,7 @@
 #pragma once
 
 #include "server/network/protocol/protocol.hpp"
+#include <unordered_map>
 #include "game/movement/position.hpp"
 #include "utils/utils_definitions.hpp"
 
@@ -77,7 +78,7 @@ using UsersMap = std::map<uint32_t, std::shared_ptr<Player>>;
 using MarketOfferList = std::list<MarketOffer>;
 using HistoryMarketOfferList = std::list<HistoryMarketOffer>;
 using ItemsTierCountList = std::map<uint16_t, std::map<uint8_t, uint32_t>>;
-using StashItemList = std::map<uint16_t, uint32_t>;
+using StashItemList = std::unordered_map<uint16_t, uint32_t>;
 using HouseMap = std::map<uint32_t, std::shared_ptr<House>>;
 
 struct TextMessage {
@@ -597,4 +598,13 @@ private:
 	void resetPlayerDeathTime() {
 		m_playerDeathTime = 0;
 	}
+
+	void parseExivaRestrictions(NetworkMessage &msg);
+	void sendExivaRestrictions(
+		bool isLogin = false,
+		const std::vector<std::string> &addedPlayerNames = {},
+		const std::vector<std::string> &removedPlayerNames = {},
+		const std::vector<std::string> &addedGuildNames = {},
+		const std::vector<std::string> &removedGuildNames = {}
+	);
 };

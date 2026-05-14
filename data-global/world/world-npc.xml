@@ -72,6 +72,9 @@
 	<npc centerx="32790" centery="31237" centerz="3" radius="1">
 		<npc name="Vincent" x="0" y="0" z="3" spawntime="60" />
 	</npc>
+	<npc centerx="32952" centery="31440" centerz="3" radius="1">
+		<npc name="A Fading Memory" x="0" y="0" z="3" spawntime="60" />
+	</npc>	
 	<npc centerx="32992" centery="31471" centerz="3" radius="1">
 		<npc name="Lazaran" x="0" y="0" z="3" spawntime="60" />
 	</npc>
@@ -188,6 +191,9 @@
 	</npc>
 	<npc centerx="33027" centery="32417" centerz="4" radius="1">
 		<npc name="Samir" x="0" y="0" z="4" spawntime="60" />
+	</npc>
+	<npc centerx="32393" centery="32470" centerz="4" radius="1">
+		<npc name="Augustin" x="0" y="0" z="4" spawntime="60" />
 	</npc>
 	<npc centerx="33109" centery="32525" centerz="4" radius="1">
 		<npc name="Haroun" x="0" y="0" z="4" spawntime="60" />
@@ -792,7 +798,7 @@
 	<npc centerx="32303" centery="32268" centerz="6" radius="1">
 		<npc name="Lungelen" x="0" y="0" z="6" spawntime="60" />
 	</npc>
-	<npc centerx="32034" centery="32273" centerz="6" radius="1">
+	<npc centerx="32035" centery="32272" centerz="6" radius="1">
 		<npc name="Santiago" x="0" y="0" z="6" spawntime="60" />
 	</npc>
 	<npc centerx="32197" centery="32292" centerz="6" radius="1">
@@ -1206,6 +1212,9 @@
 	<npc centerx="33891" centery="31474" centerz="7" radius="1">
 		<npc name="Guide Meruka" x="0" y="0" z="7" spawntime="60" />
 	</npc>
+	<npc centerx="32914" centery="31490" centerz="7" radius="1">
+		<npc name="A Wandering Soul" x="0" y="0" z="0" spawntime="60" />
+	</npc>
 	<npc centerx="33919" centery="31492" centerz="7" radius="1">
 		<npc name="Guard Saros" x="0" y="0" z="7" spawntime="60" />
 	</npc>
@@ -1425,6 +1434,9 @@
 	<npc centerx="32326" centery="31780" centerz="7" radius="1">
 		<npc name="Eva" x="0" y="0" z="7" spawntime="60" />
 	</npc>
+	<npc centerx="32303" centery="31782" centerz="7" radius="1">
+		<npc name="Legola" x="-1" y="0" z="7" spawntime="60" />
+	</npc>
 	<npc centerx="32361" centery="31782" centerz="7" radius="1">
 		<npc name="Alia" x="0" y="0" z="7" spawntime="60" />
 	</npc>
@@ -1436,9 +1448,6 @@
 	</npc>
 	<npc centerx="32391" centery="31784" centerz="7" radius="1">
 		<npc name="Blossom Bonecrusher" x="0" y="0" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="32298" centery="31785" centerz="7" radius="1">
-		<npc name="Legola" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="32333" centery="31786" centerz="7" radius="1">
 		<npc name="Liane" x="0" y="0" z="7" spawntime="60" />
@@ -1455,7 +1464,7 @@
 	<npc centerx="33193" centery="31788" centerz="7" radius="1">
 		<npc name="Edron Guardsman" x="0" y="0" z="7" spawntime="60" />
 	</npc>
-	<npc centerx="32293" centery="31789" centerz="7" radius="1">
+	<npc centerx="32290" centery="31789" centerz="7" radius="1">
 		<npc name="Busty Bonecrusher" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="32324" centery="31794" centerz="7" radius="1">
@@ -1809,9 +1818,6 @@
 	<npc centerx="33422" centery="32262" centerz="7" radius="1">
 		<npc name="Aurita" x="0" y="0" z="7" spawntime="60" />
 	</npc>
-	<npc centerx="32082" centery="32263" centerz="7" radius="1">
-		<npc name="Carlos" x="0" y="0" z="7" spawntime="60" />
-	</npc>
 	<npc centerx="32295" centery="32263" centerz="7" radius="1">
 		<npc name="Muriel" x="0" y="0" z="7" spawntime="60" />
 	</npc>
@@ -1821,7 +1827,7 @@
 	<npc centerx="32614" centery="32266" centerz="7" radius="1">
 		<npc name="A Weakened Forest Fury" x="0" y="0" z="7" spawntime="60" />
 	</npc>
-	<npc centerx="32058" centery="32268" centerz="7" radius="1">
+	<npc centerx="32059" centery="32268" centerz="7" radius="1">
 		<npc name="Zirella" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="32325" centery="32276" centerz="7" radius="1">
@@ -1829,6 +1835,12 @@
 	</npc>
 	<npc centerx="32338" centery="32277" centerz="7" radius="1">
 		<npc name="Walter, The Guard" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="32076" centery="32280" centerz="7" radius="1">
+		<npc name="Carlos" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="32473" centery="32288" centerz="7" radius="1">
+		<npc name="Hector The Mentor" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="32291" centery="32292" centerz="7" radius="1">
 		<npc name="Eclesius" x="0" y="0" z="7" spawntime="60" />

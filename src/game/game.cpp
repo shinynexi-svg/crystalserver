@@ -40,6 +40,7 @@
 #include "enums/player_wheel.hpp"
 #include "database/databasetasks.hpp"
 #include "game/scheduling/dispatcher.hpp"
+#include "game/scheduling/events_scheduler.hpp"
 #include "game/scheduling/save_manager.hpp"
 #include "game/zones/zone.hpp"
 #include "io/io_bosstiary.hpp"
@@ -331,52 +332,53 @@ Game::Game() {
 		Title(51, BESTIARY, static_cast<uint16_t>(BESTY_RACE_REPTILE), "Snake Charmer", "", "Unlocked all Reptile Bestiary entries."),
 		Title(52, BESTIARY, static_cast<uint16_t>(BESTY_RACE_GIANT), "Tumbler", "", "Unlocked all Giant Bestiary entries."),
 		Title(53, BESTIARY, static_cast<uint16_t>(BESTY_RACE_PLANT), "Weedkiller", "", "Unlocked all Plant Bestiary entries."),
-		Title(54, BESTIARY, 0, "Executioner", "", "Unlocked all Bestiary entries."),
+		Title(54, BESTIARY, static_cast<uint16_t>(BESTY_RACE_INKBORN), "Ink Eraser", "", "Unlocked all Inkborn Bestiary entries."),
+		Title(55, BESTIARY, 0, "Executioner", "", "Unlocked all Bestiary entries."),
 
-		Title(55, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_NEMESIS), "Boss Annihilator", "", "Unlocked all Nemesis bosses.", 0, false),
-		Title(56, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_ARCHFOE), "Boss Destroyer", "", "Unlocked 10 or more Archfoe bosses.", 10, true),
-		Title(57, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_NEMESIS), "Boss Devastator", "", "Unlocked 10 or more Nemesis bosses.", 10, true),
-		Title(58, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_ARCHFOE), "Boss Eraser", "", "Unlocked all Archfoe bosses.", 0, false),
-		Title(59, BOSSTIARY, 0, "Boss Executioner", "", "Unlocked all bosses.", 0, false),
-		Title(60, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_BANE), "Boss Hunter", "", "Unlocked 10 or more Bane bosses.", 10, true),
-		Title(61, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_NEMESIS), "Boss Obliterator", "", "Unlocked 40 or more Nemesis bosses.", 40, true),
-		Title(62, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_BANE), "Boss Slayer", "", "Unlocked all Bane bosses.", 0, false),
-		Title(63, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_ARCHFOE), "Boss Smiter", "", "Unlocked 40 or more Archfoe bosses.", 40, true),
-		Title(64, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_BANE), "Boss Veteran", "", "Unlocked 40 or more Bane bosses.", 40, true),
+		Title(56, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_NEMESIS), "Boss Annihilator", "", "Unlocked all Nemesis bosses.", 0, false),
+		Title(57, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_ARCHFOE), "Boss Destroyer", "", "Unlocked 10 or more Archfoe bosses.", 10, true),
+		Title(58, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_NEMESIS), "Boss Devastator", "", "Unlocked 10 or more Nemesis bosses.", 10, true),
+		Title(59, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_ARCHFOE), "Boss Eraser", "", "Unlocked all Archfoe bosses.", 0, false),
+		Title(60, BOSSTIARY, 0, "Boss Executioner", "", "Unlocked all bosses.", 0, false),
+		Title(61, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_BANE), "Boss Hunter", "", "Unlocked 10 or more Bane bosses.", 10, true),
+		Title(62, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_NEMESIS), "Boss Obliterator", "", "Unlocked 40 or more Nemesis bosses.", 40, true),
+		Title(63, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_BANE), "Boss Slayer", "", "Unlocked all Bane bosses.", 0, false),
+		Title(64, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_ARCHFOE), "Boss Smiter", "", "Unlocked 40 or more Archfoe bosses.", 40, true),
+		Title(65, BOSSTIARY, static_cast<uint16_t>(BosstiaryRarity_t::RARITY_BANE), "Boss Veteran", "", "Unlocked 40 or more Bane bosses.", 40, true),
 
-		Title(65, DAILY_REWARD, "Creature of Habit (Grade 1)", "Reward Streak of at least 7 days of consecutive logins.", 7, true),
-		Title(66, DAILY_REWARD, "Creature of Habit (Grade 2)", "Reward Streak of at least 30 days of consecutive logins.", 30, true),
-		Title(67, DAILY_REWARD, "Creature of Habit (Grade 3)", "Reward Streak of at least 90 days of consecutive logins.", 90, true),
-		Title(68, DAILY_REWARD, "Creature of Habit (Grade 4)", "Reward Streak of at least 180 days of consecutive logins.", 180, true),
-		Title(69, DAILY_REWARD, "Creature of Habit (Grade 5)", "Reward Streak of at least 365 days of consecutive logins.", 365, true),
+		Title(66, DAILY_REWARD, "Creature of Habit (Grade 1)", "Reward Streak of at least 7 days of consecutive logins.", 7, true),
+		Title(67, DAILY_REWARD, "Creature of Habit (Grade 2)", "Reward Streak of at least 30 days of consecutive logins.", 30, true),
+		Title(68, DAILY_REWARD, "Creature of Habit (Grade 3)", "Reward Streak of at least 90 days of consecutive logins.", 90, true),
+		Title(69, DAILY_REWARD, "Creature of Habit (Grade 4)", "Reward Streak of at least 180 days of consecutive logins.", 180, true),
+		Title(70, DAILY_REWARD, "Creature of Habit (Grade 5)", "Reward Streak of at least 365 days of consecutive logins.", 365, true),
 
-		Title(70, TASK, "Aspiring Huntsman", "Invested 160,000 tasks points.", 160000, true, "Aspiring Huntswoman"),
-		Title(71, TASK, "Competent Beastslayer", "Invested 320,000 tasks points.", 320000, true),
-		Title(72, TASK, "Feared Bountyhunter", "Invested 430,000 tasks points.", 430000, true),
+		Title(71, TASK, "Aspiring Huntsman", "Invested 160,000 tasks points.", 160000, true, "Aspiring Huntswoman"),
+		Title(72, TASK, "Competent Beastslayer", "Invested 320,000 tasks points.", 320000, true),
+		Title(73, TASK, "Feared Bountyhunter", "Invested 430,000 tasks points.", 430000, true),
 
-		Title(73, MAP, "Dedicated Entrepreneur", "Explored 50% of all the map areas.", 50, false),
-		Title(74, MAP, "Globetrotter", "Explored all map areas.", 100, false),
+		Title(74, MAP, "Dedicated Entrepreneur", "Explored 50% of all the map areas.", 50, false),
+		Title(75, MAP, "Globetrotter", "Explored all map areas.", 100, false),
 
-		Title(75, OTHERS, "Guild Leader", "Leading a Guild.", false),
-		Title(76, OTHERS, "Proconsul of Iksupan", "Only a true devotee to the cause of the ancient Iks and their lost legacy may step up to the rank of proconsul.", true),
-		Title(77, OTHERS, "Admirer of the Crown", "Adjust your crown and handle it.", true),
-		Title(78, OTHERS, "Big Spender", "Unlocked the full Golden Outfit.", true),
-		Title(79, OTHERS, "Challenger of the Iks", "Challenged Ahau, guardian of Iksupan, in traditional Iks warrior attire.", true),
-		Title(80, OTHERS, "Royal Bounacean Advisor", "Called to the court of Bounac by Kesar the Younger himself.", true),
-		Title(81, OTHERS, "Aeternal", "Awarded exclusively to stalwart heroes keeping the faith under all circumstances.", true),
-		Title(82, OTHERS, "Robinson Crusoe", "Some discoveries are reserved to only the most experienced adventurers. Until the next frontier opens on the horizon.", true),
-		Title(83, OTHERS, "Chompmeister", "Awarded only to true connoisseurs undertaking even the most exotic culinary escapades.", true),
-		Title(84, OTHERS, "Bringer of Rain", "Forging through battle after battle like a true gladiator.", true),
-		Title(85, OTHERS, "Beastly", "Reached 2000 charm points. Quite beastly!", true),
-		Title(86, OTHERS, "Midnight Hunter", "When the hunter becomes the hunted, perseverance decides the game.", true),
-		Title(87, OTHERS, "Ratinator", "Killing some snarky cave rats is helpful, killing over ten thousand of them is a statement.", true),
-		Title(88, OTHERS, "Doomsday Nemesis", "Awarded for great help in the battle against Gaz'haragoth.", true),
-		Title(89, OTHERS, "Hero of Bounac", "You prevailed during the battle of Bounac and broke the siege that held Bounac's people in its firm grasp.", true), // Derrotar o boss Drume.
-		Title(90, OTHERS, "King of Demon", "Defeat Morshabaal 5 times.", 0, true, "Queen of Demon"),
-		Title(91, OTHERS, "Planegazer", "Followed the trail of the Planestrider to the end.", true),
-		Title(92, OTHERS, "Time Traveller", "Anywhere in time or space.", true),
-		Title(93, OTHERS, "Truly Boss", "Reach 15,000 boss points.", true),
-		Title(94, OTHERS, "Pensive Wanderer", "You have honoured the Merudri by visiting all of their shrines and completing the ancient Three-Fold Path.", true),
+		Title(76, OTHERS, "Guild Leader", "Leading a Guild.", false),
+		Title(77, OTHERS, "Proconsul of Iksupan", "Only a true devotee to the cause of the ancient Iks and their lost legacy may step up to the rank of proconsul.", true),
+		Title(78, OTHERS, "Admirer of the Crown", "Adjust your crown and handle it.", true),
+		Title(79, OTHERS, "Big Spender", "Unlocked the full Golden Outfit.", true),
+		Title(80, OTHERS, "Challenger of the Iks", "Challenged Ahau, guardian of Iksupan, in traditional Iks warrior attire.", true),
+		Title(81, OTHERS, "Royal Bounacean Advisor", "Called to the court of Bounac by Kesar the Younger himself.", true),
+		Title(82, OTHERS, "Aeternal", "Awarded exclusively to stalwart heroes keeping the faith under all circumstances.", true),
+		Title(83, OTHERS, "Robinson Crusoe", "Some discoveries are reserved to only the most experienced adventurers. Until the next frontier opens on the horizon.", true),
+		Title(84, OTHERS, "Chompmeister", "Awarded only to true connoisseurs undertaking even the most exotic culinary escapades.", true),
+		Title(85, OTHERS, "Bringer of Rain", "Forging through battle after battle like a true gladiator.", true),
+		Title(86, OTHERS, "Beastly", "Reached 2000 charm points. Quite beastly!", true),
+		Title(87, OTHERS, "Midnight Hunter", "When the hunter becomes the hunted, perseverance decides the game.", true),
+		Title(88, OTHERS, "Ratinator", "Killing some snarky cave rats is helpful, killing over ten thousand of them is a statement.", true),
+		Title(89, OTHERS, "Doomsday Nemesis", "Awarded for great help in the battle against Gaz'haragoth.", true),
+		Title(90, OTHERS, "Hero of Bounac", "You prevailed during the battle of Bounac and broke the siege that held Bounac's people in its firm grasp.", true), // Derrotar o boss Drume.
+		Title(91, OTHERS, "King of Demon", "Defeat Morshabaal 5 times.", 0, true, "Queen of Demon"),
+		Title(92, OTHERS, "Planegazer", "Followed the trail of the Planestrider to the end.", true),
+		Title(93, OTHERS, "Time Traveller", "Anywhere in time or space.", true),
+		Title(94, OTHERS, "Truly Boss", "Reach 15,000 boss points.", true),
+		Title(95, OTHERS, "Pensive Wanderer", "You have honoured the Merudri by visiting all of their shrines and completing the ancient Three-Fold Path.", true),
 	};
 
 	m_highscoreCategoriesNames = {
@@ -1185,7 +1187,7 @@ ReturnValue Game::getPlayerByNameWildcard(const std::string &s, std::shared_ptr<
 
 std::vector<std::shared_ptr<Player>> Game::getPlayersByAccount(const std::shared_ptr<Account> &acc, bool allowOffline /* = false */) {
 	auto [accountPlayers, error] = acc->getAccountPlayers();
-	if (error != AccountErrors_t::Ok) {
+	if (error != enumToValue(AccountErrors_t::Ok)) {
 		return {};
 	}
 	std::vector<std::shared_ptr<Player>> ret;
@@ -1962,12 +1964,24 @@ void Game::playerMoveItem(const std::shared_ptr<Player> &player, const Position 
 		player->stowItem(item, count, false);
 		return;
 	}
-	if (!item->isPushable() || item->hasAttribute(ItemAttribute_t::UNIQUEID)) {
+
+	const auto fromContainer = fromCylinder->getContainer();
+	const auto toContainer = toCylinder->getContainer();
+	const bool fromStoreInbox = fromContainer && fromContainer->getRootContainer() && fromContainer->getRootContainer()->isStoreInbox();
+	const bool toStoreInbox = toContainer && toContainer->getRootContainer() && toContainer->getRootContainer()->isStoreInbox();
+	const bool isGoldPouchStoreInboxReorder = item->getID() == ITEM_GOLD_POUCH && fromStoreInbox && toStoreInbox;
+
+	uint32_t moveFlags = 0;
+	if (isGoldPouchStoreInboxReorder) {
+		moveFlags |= FLAG_IGNORENOTMOVABLE;
+	}
+
+	if ((!item->isPushable() && !isGoldPouchStoreInboxReorder) || item->hasAttribute(ItemAttribute_t::UNIQUEID)) {
 		player->sendCancelMessage(RETURNVALUE_NOTMOVABLE);
 		return;
 	}
 
-	const auto ret = internalMoveItem(fromCylinder, toCylinder, toIndex, item, count, nullptr, 0, player);
+	const auto ret = internalMoveItem(fromCylinder, toCylinder, toIndex, item, count, nullptr, moveFlags, player);
 	if (ret != RETURNVALUE_NOERROR) {
 		player->sendCancelMessage(ret);
 	} else if (toCylinder->getContainer() && fromCylinder->getContainer() && fromCylinder->getContainer()->countsToLootAnalyzerBalance() && toCylinder->getContainer()->getTopParent() == player) {
@@ -1991,8 +2005,13 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 		return RETURNVALUE_NOTPOSSIBLE;
 	}
 
+	const auto fromContainer = fromCylinder->getContainer();
+	const bool fromStoreInbox = fromContainer && fromContainer->getRootContainer() && fromContainer->getRootContainer()->isStoreInbox();
+
 	if (std::shared_ptr<Container> toCylinderContainer = toCylinder->getContainer()) {
 		auto containerID = toCylinderContainer->getID();
+		const auto rootToContainer = toCylinderContainer->getRootContainer();
+		const bool toStoreInbox = rootToContainer && rootToContainer->isStoreInbox();
 
 		// check the store inbox index if gold pouch forces it as containerID
 		if (containerID == ITEM_STORE_INBOX) {
@@ -2004,7 +2023,24 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 
 		const auto containerToStow = isTryingToStow(toPos, toCylinder);
 
+		if (toStoreInbox && !containerToStow) {
+			const bool isGoldPouch = item->getID() == ITEM_GOLD_POUCH;
+			const bool canMoveInStoreInbox = item->canBeMovedToStore() || isGoldPouch;
+			if (!canMoveInStoreInbox) {
+				return RETURNVALUE_NOTBOUGHTINSTORE;
+			}
+
+			// Store Inbox accepts only items already inside it (internal reordering).
+			if (!fromStoreInbox) {
+				return RETURNVALUE_NOTBOUGHTINSTORE;
+			}
+		}
+
 		if (containerID == ITEM_GOLD_POUCH && !containerToStow) {
+			if (!fromStoreInbox) {
+				return RETURNVALUE_NOTBOUGHTINSTORE;
+			}
+
 			if (g_configManager().getBoolean(TOGGLE_GOLD_POUCH_QUICKLOOT_ONLY)) {
 				return RETURNVALUE_CONTAINERNOTENOUGHROOM;
 			}
@@ -2013,11 +2049,6 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 
 			if (!allowAnything && item->getID() != ITEM_GOLD_COIN && item->getID() != ITEM_PLATINUM_COIN && item->getID() != ITEM_CRYSTAL_COIN) {
 				return RETURNVALUE_ITEMCANNOTBEMOVEDPOUCH;
-			}
-
-			// prevent move up from ponch to store inbox.
-			if (!item->canBeMovedToStore() && fromCylinder->getContainer() && fromCylinder->getContainer()->getID() == ITEM_GOLD_POUCH) {
-				return RETURNVALUE_NOTBOUGHTINSTORE;
 			}
 
 			return RETURNVALUE_NOERROR;
@@ -2778,9 +2809,17 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 		return false;
 	}
 
-	// Sort money items descending by worth to minimize item operations.
+	// Prefer lower denominations first so routine payments do not consume
+	// crystal/platinum coins when gold coins already cover the cost.
 	std::sort(moneyItems.begin(), moneyItems.end(), [](const auto &a, const auto &b) {
-		return a.first > b.first;
+		const uint32_t aCount = std::max<uint32_t>(1, a.second->getItemCount());
+		const uint32_t bCount = std::max<uint32_t>(1, b.second->getItemCount());
+		const uint32_t aUnitWorth = a.first / aCount;
+		const uint32_t bUnitWorth = b.first / bCount;
+		if (aUnitWorth == bUnitWorth) {
+			return a.first < b.first;
+		}
+		return aUnitWorth < bUnitWorth;
 	});
 
 	for (const auto &entry : moneyItems) {
@@ -2830,7 +2869,20 @@ void Game::addMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money, u
 			const uint16_t createCount = std::min<uint32_t>(100, count);
 			const std::shared_ptr<Item> &remaindItem = Item::CreateItem(itemId, createCount);
 
-			ReturnValue ret = internalAddItem(cylinder, remaindItem, INDEX_WHEREEVER, flags);
+			ReturnValue ret = RETURNVALUE_NOTPOSSIBLE;
+			bool triedManaged = false;
+
+			if (const auto &player = std::dynamic_pointer_cast<Player>(cylinder)) {
+				if (!g_configManager().getBoolean(AUTOBANK)) {
+					ret = internalCollectManagedItems(player, remaindItem, getObjectCategory(remaindItem), true);
+					triedManaged = true;
+				}
+			}
+
+			if (!triedManaged || ret != RETURNVALUE_NOERROR) {
+				ret = internalAddItem(cylinder, remaindItem, INDEX_WHEREEVER, flags);
+			}
+
 			if (ret != RETURNVALUE_NOERROR) {
 				internalAddItem(cylinder->getTile(), remaindItem, INDEX_WHEREEVER, FLAG_NOLIMIT);
 			}
@@ -3624,9 +3676,11 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 		return;
 	}
 	if (slot == CONST_SLOT_NECKLACE) {
-		player->setNextNecklaceAction(OTSYS_TIME() + g_configManager().getNumber(ACTIONS_DELAY_INTERVAL));
+		player->setNextNecklaceAction(OTSYS_TIME() + g_configManager().getNumber(NECKLACE_DELAY_INTERVAL));
+		player->sendCancelMessage("You cannot use objects that fast.");
 	} else if (slot == CONST_SLOT_RING) {
-		player->setNextRingAction(OTSYS_TIME() + g_configManager().getNumber(ACTIONS_DELAY_INTERVAL));
+		player->setNextRingAction(OTSYS_TIME() + g_configManager().getNumber(RING_DELAY_INTERVAL));
+		player->sendCancelMessage("You cannot use objects that fast.");
 	} else {
 		player->setNextAction(OTSYS_TIME() + g_configManager().getNumber(ACTIONS_DELAY_INTERVAL));
 	}
@@ -7144,7 +7198,7 @@ bool Game::combatBlockHit(CombatDamage &damage, const std::shared_ptr<Creature> 
 					}
 					damageReflected.extension = true;
 					damageReflected.exString += " (damage reflection)";
-					damageReflectedParams.combatType = damage.primary.type;
+					damageReflectedParams.combatType = damage.secondary.type;
 					damageReflectedParams.aggressive = true;
 					canReflect = true;
 				}
@@ -7178,13 +7232,13 @@ bool Game::combatBlockHit(CombatDamage &damage, const std::shared_ptr<Creature> 
 		damage.secondary.value = -damage.secondary.value;
 		InternalGame::sendBlockEffect(secondaryBlockType, damage.secondary.type, target->getPosition(), attacker);
 
-		if (!damage.extension && attacker && target->getMonster()) {
+		if (!damage.extension && attacker) {
 			int32_t secondaryReflectPercent = target->getReflectPercent(damage.secondary.type, true);
 			int32_t secondaryReflectFlat = target->getReflectFlat(damage.secondary.type, true);
 			if (secondaryReflectPercent > 0 || secondaryReflectFlat > 0) {
 				if (!canReflect) {
 					int32_t reflectFlat = -static_cast<int32_t>(secondaryReflectFlat);
-					int32_t reflectPercent = std::ceil(damage.primary.value * secondaryReflectPercent / 100.);
+					int32_t reflectPercent = std::ceil(damage.secondary.value * secondaryReflectPercent / 100.);
 					int32_t reflectLimit = std::ceil(attacker->getMaxHealth() * 0.01);
 					damageReflected.primary.value = std::max(-reflectLimit, reflectFlat + reflectPercent);
 					damageReflected.primary.type = damage.secondary.type;
@@ -7193,12 +7247,12 @@ bool Game::combatBlockHit(CombatDamage &damage, const std::shared_ptr<Creature> 
 					}
 					damageReflected.extension = true;
 					damageReflected.exString += " (damage reflection)";
-					damageReflectedParams.combatType = damage.primary.type;
+					damageReflectedParams.combatType = damage.secondary.type;
 					damageReflectedParams.aggressive = true;
 					canReflect = true;
 				} else {
 					damageReflected.secondary.type = damage.secondary.type;
-					damageReflected.primary.value = std::ceil(damage.secondary.value * secondaryReflectPercent / 100.) + std::max(-static_cast<int32_t>(std::ceil(attacker->getMaxHealth() * 0.01)), std::max(damage.secondary.value, -(static_cast<int32_t>(secondaryReflectFlat))));
+					damageReflected.secondary.value = std::max(-static_cast<int32_t>(std::ceil(attacker->getMaxHealth() * 0.01)), -static_cast<int32_t>(secondaryReflectFlat) + static_cast<int32_t>(std::ceil(damage.secondary.value * secondaryReflectPercent / 100.)));
 				}
 			}
 		}
@@ -7215,7 +7269,7 @@ bool Game::combatBlockHit(CombatDamage &damage, const std::shared_ptr<Creature> 
 		if (!damage.exString.empty()) {
 			damage.exString += ", ";
 		}
-		damage.exString += "active elemental resiliance";
+		damage.exString += "active elemental resilience";
 	}
 
 	if (damageIncreaseMessage) {
@@ -7252,6 +7306,16 @@ void Game::combatGetTypeInfo(CombatType_t combatType, const std::shared_ptr<Crea
 							splash = Item::CreateItem(ITEM_SMALLSPLASH, FLUID_BLOOD);
 						}
 					}
+					break;
+				case RACE_CHOCOLATE:
+					color = TEXTCOLOR_LIGHTGREY;
+					effect = CONST_ME_CACAO;
+					splash = Item::CreateItem(ITEM_SMALLSPLASH, FLUID_CHOCOLATE);
+					break;
+				case RACE_CANDY:
+					color = TEXTCOLOR_DARKRED;
+					effect = CONST_ME_SIURP;
+					splash = Item::CreateItem(ITEM_SMALLSPLASH, FLUID_CANDY);
 					break;
 				case RACE_INK:
 					color = TEXTCOLOR_LIGHTGREY;
@@ -9703,7 +9767,7 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 		}
 
 		if (it.id == ITEM_STORE_COIN) {
-			auto [transferableCoins, result] = player->getAccount()->getCoins(CoinType::Transferable);
+			auto [transferableCoins, result] = player->getAccount()->getCoins(enumToValue(CoinType::Transferable));
 
 			if (amount > transferableCoins) {
 				offerStatus << "Amount is greater than coins for player " << player->getName();
@@ -9711,7 +9775,7 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 			}
 
 			// Do not register a transaction for coins creating an offer
-			player->getAccount()->removeCoins(CoinType::Transferable, static_cast<uint32_t>(amount), "");
+			player->getAccount()->removeCoins(enumToValue(CoinType::Transferable), static_cast<uint32_t>(amount), "");
 		} else {
 			if (player->getStashItemCount(it.wareId) > 0) {
 				g_logger().debug("[Market] Player {} has item {} in stash, forcing tier 0 for the offer.", player->getName(), itemId);
@@ -9798,7 +9862,7 @@ void Game::playerCancelMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 
 		if (it.id == ITEM_STORE_COIN) {
 			// Do not register a transaction for coins upon cancellation
-			player->getAccount()->addCoins(CoinType::Transferable, offer.amount, "");
+			player->getAccount()->addCoins(enumToValue(CoinType::Transferable), offer.amount, "");
 		} else if (it.stackable) {
 			uint16_t tmpAmount = offer.amount;
 
@@ -9917,20 +9981,15 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		const auto &buyerPlayerInbox = buyerPlayer->getInbox();
 
 		if (it.id == ITEM_STORE_COIN) {
-			auto [transferableCoins, error] = playerAccount->getCoins(CoinType::Transferable);
-
-			if (error != AccountErrors_t::Ok) {
-				offerStatus << "Failed to load transferable coins for player " << player->getName();
-				return;
-			}
+			auto [transferableCoins, result] = player->getAccount()->getCoins(enumToValue(CoinType::Transferable));
 
 			if (amount > transferableCoins) {
-				offerStatus << "Amount is greater than coins";
+				offerStatus << "Amount is greater than coins for player " << player->getName();
 				return;
 			}
 
 			playerAccount->removeCoins(
-				CoinType::Transferable,
+				enumToValue(CoinType::Transferable),
 				amount,
 				"Sold on Market"
 			);
@@ -9958,7 +10017,7 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		g_metrics().addCounter("balance_increase", totalPrice, { { "player", player->getName() }, { "context", "market_sale" } });
 
 		if (it.id == ITEM_STORE_COIN) {
-			buyerPlayer->getAccount()->addCoins(CoinType::Transferable, amount, "Purchased on Market");
+			buyerPlayer->getAccount()->addCoins(enumToValue(CoinType::Transferable), amount, "Purchased on Market");
 		} else if (it.stackable) {
 			uint16_t tmpAmount = amount;
 			while (tmpAmount > 0) {
@@ -10029,7 +10088,7 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		g_metrics().addCounter("balance_decrease", totalPrice, { { "player", player->getName() }, { "context", "market_purchase" } });
 
 		if (it.id == ITEM_STORE_COIN) {
-			player->getAccount()->addCoins(CoinType::Transferable, amount, "Purchased on Market");
+			player->getAccount()->addCoins(enumToValue(CoinType::Transferable), amount, "Purchased on Market");
 		} else if (it.stackable) {
 			uint16_t tmpAmount = amount;
 			while (tmpAmount > 0) {
@@ -10083,7 +10142,7 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		sellerPlayer->setBankBalance(sellerPlayer->getBankBalance() + totalPrice);
 		g_metrics().addCounter("balance_increase", totalPrice, { { "player", sellerPlayer->getName() }, { "context", "market_sale" } });
 		if (it.id == ITEM_STORE_COIN) {
-			sellerPlayer->getAccount()->registerCoinTransaction(CoinTransactionType::Remove, CoinType::Transferable, amount, "Sold on Market");
+			sellerPlayer->getAccount()->registerCoinTransaction(enumToValue(CoinTransactionType::Remove), enumToValue(CoinType::Transferable), amount, "Sold on Market");
 		}
 
 		if (it.id != ITEM_STORE_COIN) {
@@ -10865,8 +10924,12 @@ uint32_t Game::makeFiendishMonster(uint32_t forgeableMonsterId /* = 0*/, bool cr
 		// If the forgeable monsters haven't been created
 		// Then we'll create them so they don't return in the next if (forgeableMonsters.empty())
 		for (const auto &[monsterId, monster] : monsters) {
-			auto monsterTile = monster->getTile();
-			if (!monster || !monsterTile) {
+			if (!monster) {
+				continue;
+			}
+
+			const auto monsterTile = monster->getTile();
+			if (!monsterTile) {
 				continue;
 			}
 
@@ -10987,6 +11050,17 @@ void Game::updateFiendishMonsterStatus(uint32_t monsterId, const std::string &mo
 	makeFiendishMonster();
 }
 
+void Game::updateInfluencedMonsterStatus(uint32_t monsterId, const std::string &monsterName) {
+	const auto &monster = getMonsterByID(monsterId);
+	if (!monster) {
+		g_logger().warn("[{}] Failed to update monster with id {} and name {}, monster not found", __FUNCTION__, monsterId, monsterName);
+	} else {
+		monster->clearInfluencedStatus();
+	}
+
+	removeInfluencedMonster(monsterId, false);
+}
+
 bool Game::removeForgeMonster(uint32_t id, ForgeClassifications_t monsterForgeClassification, bool create) {
 	if (monsterForgeClassification == ForgeClassifications_t::FORGE_FIENDISH_MONSTER) {
 		removeFiendishMonster(id, create);
@@ -11034,11 +11108,11 @@ bool Game::removeFiendishMonster(uint32_t id, bool create /* = true*/) {
 }
 
 void Game::updateForgeableMonsters() {
-	if (auto influencedLimit = g_configManager().getNumber(FORGE_INFLUENCED_CREATURES_LIMIT);
+	if (auto influencedLimit = getInfluencedLimit();
 	    forgeableMonsters.size() < influencedLimit) {
 		forgeableMonsters.clear();
 		for (const auto &[monsterId, monster] : monsters) {
-			const auto &monsterTile = monster->getTile();
+			const auto monsterTile = monster->getTile();
 			if (!monsterTile) {
 				continue;
 			}
@@ -11055,10 +11129,29 @@ void Game::updateForgeableMonsters() {
 		}
 	}
 
-	uint32_t fiendishLimit = g_configManager().getNumber(FORGE_FIENDISH_CREATURES_LIMIT); // Fiendish Creatures limit
+	for (const auto &monsterId : getInfluencedMonsters()) {
+		if (!getMonsterByID(monsterId)) {
+			removeInfluencedMonster(monsterId);
+		}
+	}
+
+	uint32_t fiendishLimit = getFiendishLimit(); // Fiendish Creatures limit
 	if (fiendishMonsters.size() < fiendishLimit) {
 		createFiendishMonsters();
 	}
+
+	uint32_t influencedLimit = getInfluencedLimit();
+	if (influencedMonsters.size() < influencedLimit) {
+		createInfluencedMonsters(false);
+	}
+}
+
+uint32_t Game::getFiendishLimit() const {
+	return static_cast<uint32_t>(g_configManager().getNumber(FORGE_FIENDISH_CREATURES_LIMIT) * g_eventsScheduler().getFiendishSchedule() / 100);
+}
+
+uint32_t Game::getInfluencedLimit() const {
+	return static_cast<uint32_t>(g_configManager().getNumber(FORGE_INFLUENCED_CREATURES_LIMIT) * g_eventsScheduler().getInfluencedSchedule() / 100);
 }
 
 void Game::createFiendishMonsters() {
@@ -11079,21 +11172,19 @@ void Game::createFiendishMonsters() {
 	}
 }
 
-void Game::createInfluencedMonsters() {
-	uint32_t created = 0;
-	uint32_t influencedLimit = g_configManager().getNumber(FORGE_INFLUENCED_CREATURES_LIMIT);
-
-	while (influencedMonsters.size() < influencedLimit) {
-		if (influencedMonsters.size() >= influencedLimit) {
-			g_logger().warn("[{}] - Returning in creation of Influenced, size: {}, max is: {}.", __FUNCTION__, influencedMonsters.size(), influencedLimit);
-			break;
+void Game::createInfluencedMonsters(bool scheduleEvent /* = true */) {
+	uint32_t influencedLimit = getInfluencedLimit();
+	if (influencedMonsters.size() < influencedLimit) {
+		uint32_t toCreate = influencedLimit - static_cast<uint32_t>(influencedMonsters.size());
+		for (uint32_t i = 0; i < toCreate; ++i) {
+			if (makeInfluencedMonster() == 0) {
+				break;
+			}
 		}
+	}
 
-		if (auto ret = makeInfluencedMonster(); ret == 0) { // Condition
-			return;
-		}
-
-		created++;
+	if (scheduleEvent) {
+		scheduleInfluencedMonstersUpdate();
 	}
 }
 
@@ -11107,7 +11198,7 @@ void Game::checkForgeEventId(uint32_t monsterId) {
 
 bool Game::addInfluencedMonster(const std::shared_ptr<Monster> &monster) {
 	if (monster && monster->canBeForgeMonster()) {
-		if (auto maxInfluencedMonsters = static_cast<uint32_t>(g_configManager().getNumber(FORGE_INFLUENCED_CREATURES_LIMIT));
+		if (auto maxInfluencedMonsters = static_cast<uint32_t>(getInfluencedLimit());
 		    // If condition
 		    (influencedMonsters.size() + 1) > maxInfluencedMonsters) {
 			return false;
@@ -11119,6 +11210,49 @@ bool Game::addInfluencedMonster(const std::shared_ptr<Monster> &monster) {
 		return true;
 	}
 	return false;
+}
+
+void Game::batchRefreshInfluencedMonsters() {
+	std::vector<uint32_t> toRefresh(influencedMonsters.begin(), influencedMonsters.end());
+	for (const auto monsterId : toRefresh) {
+		const auto &monster = getMonsterByID(monsterId);
+		std::string name = monster ? monster->getName() : "";
+		updateInfluencedMonsterStatus(monsterId, name);
+	}
+
+	createInfluencedMonsters();
+}
+
+void Game::scheduleInfluencedMonstersUpdate() {
+	if (influencedMonstersEventId != 0) {
+		g_dispatcher().stopEvent(influencedMonstersEventId);
+	}
+
+	std::string saveIntervalType = g_configManager().getString(FORGE_INFLUENCED_INTERVAL_TYPE);
+	auto saveIntervalConfigTime = std::atoi(g_configManager().getString(FORGE_INFLUENCED_INTERVAL_TIME).c_str());
+	int intervalTime = 0;
+	if (saveIntervalType == "second") {
+		intervalTime = 1000;
+	} else if (saveIntervalType == "minute") {
+		intervalTime = 60 * 1000;
+	} else if (saveIntervalType == "hour") {
+		intervalTime = 60 * 60 * 1000;
+	}
+
+	uint32_t finalTime = 0;
+	if (intervalTime == 0) {
+		g_logger().warn("Influenced interval type is wrong, setting default time to 1h");
+		finalTime = 3600 * 1000;
+	} else {
+		finalTime = static_cast<uint32_t>(saveIntervalConfigTime * intervalTime);
+	}
+
+	auto schedulerTask = createPlayerTask(
+		finalTime,
+		[this] { batchRefreshInfluencedMonsters(); },
+		__FUNCTION__
+	);
+	influencedMonstersEventId = g_dispatcher().scheduleEvent(schedulerTask);
 }
 
 bool Game::addItemStoreInbox(const std::shared_ptr<Player> &player, uint32_t itemId) {

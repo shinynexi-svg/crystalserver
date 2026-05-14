@@ -452,6 +452,11 @@ QuestDoorAction = {
 			{ x = 32780, y = 31208, z = 7 },
 		},
 	},
+	-- Blood Brothers door
+	[Storage.Quest.U8_4.BloodBrothers.BloodCrystalDoor] = {
+		itemId = false,
+		itemPos = { { x = 32776, y = 31107, z = 10 } },
+	},
 	-- Children of the revolution door
 	[Storage.Quest.U8_54.ChildrenOfTheRevolution.Mission03] = {
 		itemId = false,

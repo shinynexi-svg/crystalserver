@@ -28,6 +28,7 @@
 #include "items/containers/inbox/inbox.hpp"
 #include "items/containers/rewards/reward.hpp"
 #include "creatures/players/player.hpp"
+#include "kv/kv.hpp"
 
 bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const ItemBlockList &itemList, DBInsert &query_insert, PropWriteStream &propWriteStream) {
 	if (!player) {
@@ -172,6 +173,8 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 		player->changeHealth(1);
 	}
 
+	savePlayerExivaRestrictions(player);
+
 	Database &db = Database::getInstance();
 
 	std::ostringstream query;
@@ -191,6 +194,18 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	// First, an UPDATE query to write the player itself
 	query.str("");
 	query << "UPDATE `players` SET ";
+
+	time_t updatedLastLoginSaved = player->lastLoginSaved;
+	int64_t onlineTimeDelta = 0;
+	bool advanceLastLoginSaved = false;
+	if (!player->isOffline() && player->lastLoginSaved != 0) {
+		const auto now = std::chrono::system_clock::now();
+		const auto lastLoginSaved = std::chrono::system_clock::from_time_t(player->lastLoginSaved);
+		onlineTimeDelta = std::max<int64_t>(0, std::chrono::duration_cast<std::chrono::seconds>(now - lastLoginSaved).count());
+		updatedLastLoginSaved = std::chrono::system_clock::to_time_t(now);
+		advanceLastLoginSaved = true;
+	}
+
 	query << "`name` = " << db.escapeString(player->name) << ",";
 	query << "`level` = " << player->level << ",";
 	query << "`group_id` = " << player->group->id << ",";
@@ -236,8 +251,8 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`cap` = " << (player->capacity / 100) << ",";
 	query << "`sex` = " << static_cast<uint16_t>(player->sex) << ",";
 
-	if (player->lastLoginSaved != 0) {
-		query << "`lastlogin` = " << player->lastLoginSaved << ",";
+	if (updatedLastLoginSaved != 0) {
+		query << "`lastlogin` = " << updatedLastLoginSaved << ",";
 	}
 
 	if (player->lastIP != 0) {
@@ -344,9 +359,7 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`weapon_proficiencies` = " << db.escapeBlob(proficiencyData, static_cast<uint32_t>(proficiencySize)) << ",";
 
 	if (!player->isOffline()) {
-		auto now = std::chrono::system_clock::now();
-		auto lastLoginSaved = std::chrono::system_clock::from_time_t(player->lastLoginSaved);
-		query << "`onlinetime` = `onlinetime` + " << std::chrono::duration_cast<std::chrono::seconds>(now - lastLoginSaved).count() << ",";
+		query << "`onlinetime` = `onlinetime` + " << onlineTimeDelta << ",";
 	}
 
 	for (int i = 1; i <= 8; i++) {
@@ -357,6 +370,10 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 
 	if (!db.executeQuery(query.str())) {
 		return false;
+	}
+
+	if (advanceLastLoginSaved) {
+		player->lastLoginSaved = updatedLastLoginSaved;
 	}
 	return true;
 }
@@ -941,4 +958,35 @@ bool IOLoginDataSave::savePlayerMounts(const std::shared_ptr<Player> &player) {
 
 	player->setMountsModified(false);
 	return true;
+}
+
+void IOLoginDataSave::savePlayerExivaRestrictions(const std::shared_ptr<Player> &player) {
+	if (!player) {
+		return;
+	}
+
+	const auto &restrictions = player->getExivaRestrictions();
+
+	const auto &scope = player->kv()->scoped("exiva-restrictions");
+
+	scope->set("allowAll", restrictions.allowAll);
+	scope->set("allowOwnGuild", restrictions.allowOwnGuild);
+	scope->set("allowOwnParty", restrictions.allowOwnParty);
+	scope->set("allowVipList", restrictions.allowVipList);
+	scope->set("allowPlayerWhitelist", restrictions.allowPlayerWhitelist);
+	scope->set("allowGuildWhitelist", restrictions.allowGuildWhitelist);
+
+	ArrayType playerArrayWrapper;
+	for (const auto &playerGuid : restrictions.playerWhitelist) {
+		playerArrayWrapper.push_back(ValueWrapper(static_cast<int>(playerGuid)));
+	}
+
+	scope->set("playerWhitelist", ValueWrapper(playerArrayWrapper));
+
+	ArrayType guildArrayWrapper;
+	for (const auto &guildId : restrictions.guildWhitelist) {
+		guildArrayWrapper.push_back(ValueWrapper(static_cast<int>(guildId)));
+	}
+
+	scope->set("guildWhitelist", ValueWrapper(guildArrayWrapper));
 }
