@@ -34,28 +34,28 @@
 #include <ctime>
 
 namespace {
-DailyRewardType_t parseRewardType(const std::string &value) {
-	if (value == "item") {
+	DailyRewardType_t parseRewardType(const std::string &value) {
+		if (value == "item") {
+			return DAILY_REWARD_TYPE_ITEM;
+		}
+		if (value == "storage") {
+			return DAILY_REWARD_TYPE_STORAGE;
+		}
+		if (value == "preyReroll") {
+			return DAILY_REWARD_TYPE_PREY_REROLL;
+		}
+		if (value == "xpBoost") {
+			return DAILY_REWARD_TYPE_XP_BOOST;
+		}
 		return DAILY_REWARD_TYPE_ITEM;
 	}
-	if (value == "storage") {
-		return DAILY_REWARD_TYPE_STORAGE;
-	}
-	if (value == "preyReroll") {
-		return DAILY_REWARD_TYPE_PREY_REROLL;
-	}
-	if (value == "xpBoost") {
-		return DAILY_REWARD_TYPE_XP_BOOST;
-	}
-	return DAILY_REWARD_TYPE_ITEM;
-}
 
-DailyRewardSystemType_t parseSystemType(const std::string &value) {
-	if (value == "two") {
-		return DAILY_REWARD_SYSTEM_TYPE_TWO;
+	DailyRewardSystemType_t parseSystemType(const std::string &value) {
+		if (value == "two") {
+			return DAILY_REWARD_SYSTEM_TYPE_TWO;
+		}
+		return DAILY_REWARD_SYSTEM_TYPE_ONE;
 	}
-	return DAILY_REWARD_SYSTEM_TYPE_ONE;
-}
 } // namespace
 
 DailyRewards &DailyRewards::getInstance() {

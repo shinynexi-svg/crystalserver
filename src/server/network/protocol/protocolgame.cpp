@@ -86,13 +86,13 @@ namespace {
 		if (rewardIt == rewards.end()) {
 			return;
 		}
-	
+
 		const auto &dailyTable = rewardIt->second;
 		uint16_t itemsToPick = dailyTable.freeAccount;
 		if (accountStatus == DAILY_REWARD_STATUS_PREMIUM) {
 			itemsToPick = dailyTable.premiumAccount;
 		}
-	
+
 		std::vector<uint16_t> rewardItems;
 		const uint8_t baseId = player->getVocation()->getBaseId();
 		if (const auto itemsIt = g_dailyRewards().getVocationItems().find(baseId); itemsIt != g_dailyRewards().getVocationItems().end()) {
@@ -101,7 +101,7 @@ namespace {
 		if (!dailyTable.items.empty()) {
 			rewardItems = dailyTable.items;
 		}
-	
+
 		msg.addByte(static_cast<uint8_t>(dailyTable.systemType));
 		if (dailyTable.systemType == DAILY_REWARD_SYSTEM_TYPE_ONE) {
 			if (dailyTable.type == DAILY_REWARD_TYPE_ITEM) {
