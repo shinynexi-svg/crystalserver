@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dailyrewards testMode="false" serverTimeThreshold="86400">
+	<storages>
+		<storage name="currentDayStreak" key="14897" />
+		<storage name="nextRewardTime" key="14899" />
+		<storage name="collectionTokens" key="14901" />
+		<storage name="staminaBonus" key="14902" />
+		<storage name="jokerTokens" key="14903" />
+		<storage name="lastServerSave" key="14110" />
+		<storage name="avoidDouble" key="13412" />
+		<storage name="notifyReset" key="13413" />
+		<storage name="avoidDoubleJoker" key="13414" />
+	</storages>
+
+	<strikeBonuses>
+		<bonus day="1" text="No bonus for first day" />
+		<bonus day="2" text="Allow Hit Point Regeneration" />
+		<bonus day="3" text="Allow Mana Regeneration" />
+		<bonus day="4" text="Stamina Regeneration" />
+		<bonus day="5" text="Double Hit Point Regeneration" />
+		<bonus day="6" text="Double Mana Regeneration" />
+		<bonus day="7" text="Soul Points Regeneration" />
+	</strikeBonuses>
+
+	<vocationItems>
+		<vocation id="0">
+			<item id="266" />
+			<item id="268" />
+		</vocation>
+		<vocation id="3">
+			<item id="266" />
+			<item id="236" />
+			<item id="268" />
+			<item id="237" />
+			<item id="7642" />
+			<item id="23374" />
+			<item id="3203" />
+			<item id="3161" />
+			<item id="3178" />
+			<item id="3153" />
+			<item id="3197" />
+			<item id="3149" />
+			<item id="3164" />
+			<item id="3200" />
+			<item id="3192" />
+			<item id="3188" />
+			<item id="3190" />
+			<item id="3189" />
+			<item id="3191" />
+			<item id="3158" />
+			<item id="3152" />
+			<item id="3180" />
+			<item id="3173" />
+			<item id="3176" />
+			<item id="3195" />
+			<item id="3175" />
+			<item id="3155" />
+			<item id="3202" />
+		</vocation>
+		<vocation id="2">
+			<item id="266" />
+			<item id="268" />
+			<item id="237" />
+			<item id="238" />
+			<item id="23373" />
+			<item id="3203" />
+			<item id="3161" />
+			<item id="3178" />
+			<item id="3153" />
+			<item id="3197" />
+			<item id="3149" />
+			<item id="3164" />
+			<item id="3200" />
+			<item id="3192" />
+			<item id="3188" />
+			<item id="3190" />
+			<item id="3189" />
+			<item id="3156" />
+			<item id="3191" />
+			<item id="3158" />
+			<item id="3152" />
+			<item id="3180" />
+			<item id="3173" />
+			<item id="3176" />
+			<item id="3195" />
+			<item id="3175" />
+			<item id="3155" />
+			<item id="3202" />
+		</vocation>
+		<vocation id="1">
+			<item id="266" />
+			<item id="268" />
+			<item id="237" />
+			<item id="238" />
+			<item id="23373" />
+			<item id="3203" />
+			<item id="3161" />
+			<item id="3178" />
+			<item id="3153" />
+			<item id="3197" />
+			<item id="3149" />
+			<item id="3164" />
+			<item id="3200" />
+			<item id="3192" />
+			<item id="3188" />
+			<item id="3190" />
+			<item id="3189" />
+			<item id="3191" />
+			<item id="3158" />
+			<item id="3152" />
+			<item id="3180" />
+			<item id="3173" />
+			<item id="3176" />
+			<item id="3195" />
+			<item id="3175" />
+			<item id="3155" />
+			<item id="3202" />
+		</vocation>
+		<vocation id="4">
+			<item id="266" />
+			<item id="236" />
+			<item id="239" />
+			<item id="7643" />
+			<item id="23375" />
+			<item id="268" />
+			<item id="3203" />
+			<item id="3161" />
+			<item id="3178" />
+			<item id="3153" />
+			<item id="3197" />
+			<item id="3149" />
+			<item id="3164" />
+			<item id="3200" />
+			<item id="3192" />
+			<item id="3188" />
+			<item id="3190" />
+			<item id="3189" />
+			<item id="3191" />
+			<item id="3158" />
+			<item id="3152" />
+			<item id="3180" />
+			<item id="3173" />
+			<item id="3176" />
+			<item id="3195" />
+			<item id="3175" />
+			<item id="3155" />
+			<item id="3202" />
+		</vocation>
+		<vocation id="5">
+			<item id="266" />
+			<item id="236" />
+			<item id="268" />
+			<item id="237" />
+			<item id="7642" />
+			<item id="23374" />
+			<item id="3203" />
+			<item id="3161" />
+			<item id="3178" />
+			<item id="3153" />
+			<item id="3197" />
+			<item id="3149" />
+			<item id="3164" />
+			<item id="3200" />
+			<item id="3192" />
+			<item id="3188" />
+			<item id="3190" />
+			<item id="3189" />
+			<item id="3191" />
+			<item id="3158" />
+			<item id="3152" />
+			<item id="3180" />
+			<item id="3173" />
+			<item id="3176" />
+			<item id="3195" />
+			<item id="3175" />
+			<item id="3155" />
+			<item id="3202" />
+		</vocation>
+	</vocationItems>
+
+	<rewards>
+		<reward day="1" type="item" systemType="one" freeAccount="5" premiumAccount="10" />
+		<reward day="2" type="item" systemType="one" freeAccount="5" premiumAccount="10" />
+		<reward day="3" type="preyReroll" systemType="two" freeAccount="1" premiumAccount="2" />
+		<reward day="4" type="item" systemType="one" freeAccount="10" premiumAccount="20" />
+		<reward day="5" type="preyReroll" systemType="two" freeAccount="1" premiumAccount="2" />
+		<reward day="6" type="item" systemType="one" freeAccount="1" premiumAccount="2" itemCharges="50">
+			<item id="28540" />
+			<item id="28541" />
+			<item id="28542" />
+			<item id="28543" />
+			<item id="28544" />
+			<item id="28545" />
+			<item id="44064" />
+			<item id="50292" />
+		</reward>
+		<reward day="7" type="xpBoost" systemType="two" freeAccount="10" premiumAccount="30" />
+	</rewards>
+
+	<shrines>
+		<item id="25720" />
+		<item id="25721" />
+		<item id="25722" />
+		<item id="25723" />
+		<item id="25802" />
+		<item id="25803" />
+	</shrines>
+</dailyrewards>
