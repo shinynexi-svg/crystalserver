@@ -177,7 +177,16 @@ void DailyRewards::setDayStreak(const std::shared_ptr<Player> &player, int32_t v
 }
 
 uint32_t DailyRewards::getNextRewardTime(const std::shared_ptr<Player> &player) const {
-	return static_cast<uint32_t>(std::max<int32_t>(0, player->getStorageValue(storages.nextRewardTime)));
+	static constexpr uint32_t MIN_VALID_TIMESTAMP = 1400000000; // ignore corrupted quest storages (e.g. 14899 = 1)
+	const int32_t storage = player->getStorageValue(storages.nextRewardTime);
+	if (storage <= 0) {
+		return 0;
+	}
+	const auto value = static_cast<uint32_t>(storage);
+	if (value < MIN_VALID_TIMESTAMP) {
+		return 0;
+	}
+	return value;
 }
 
 void DailyRewards::setNextRewardTime(const std::shared_ptr<Player> &player, int32_t value) const {
@@ -224,12 +233,23 @@ time_t DailyRewards::getLastServerSave() const {
 }
 
 bool DailyRewards::isRewardTaken(const std::shared_ptr<Player> &player) const {
-	const int32_t playerStorage = player->getStorageValue(storages.avoidDouble);
-	const time_t lastSave = getLastServerSave();
 	const uint32_t nextReward = getNextRewardTime(player);
-	if (nextReward > 0 && std::time(nullptr) >= nextReward) {
+	const time_t now = std::time(nullptr);
+
+	if (nextReward > static_cast<uint32_t>(now)) {
+		return true;
+	}
+
+	if (nextReward > 0 && now >= static_cast<time_t>(nextReward)) {
 		return false;
 	}
+
+	if (player->getDailyReward() == DAILY_REWARD_COLLECTED) {
+		return true;
+	}
+
+	const int32_t playerStorage = player->getStorageValue(storages.avoidDouble);
+	const time_t lastSave = getLastServerSave();
 	return playerStorage == static_cast<int32_t>(lastSave);
 }
 
@@ -340,20 +360,13 @@ void DailyRewards::loadPlayerBonuses(const std::shared_ptr<Player> &player) {
 
 void DailyRewards::initPlayer(const std::shared_ptr<Player> &player) {
 	const time_t now = std::time(nullptr);
-	std::tm timeInfo {};
-#if defined(_WIN32)
-	localtime_s(&timeInfo, &now);
-#else
-	localtime_r(&now, &timeInfo);
-#endif
-	const auto currentMonth = static_cast<int32_t>(timeInfo.tm_mon + 1);
 
-	if (getJokerTokens(player) < 3 && currentMonth != player->getStorageValue(storages.avoidDoubleJoker)) {
-		player->addStorageValue(storages.avoidDoubleJoker, currentMonth);
-		setJokerTokens(player, getJokerTokens(player) + 1);
+	uint32_t nextReward = getNextRewardTime(player);
+	if (player->getDailyReward() == DAILY_REWARD_COLLECTED && nextReward == 0) {
+		setNextRewardTime(player, static_cast<int32_t>(now + serverTimeThreshold));
+		nextReward = getNextRewardTime(player);
 	}
 
-	const uint32_t nextReward = getNextRewardTime(player);
 	if (nextReward > 0 && now >= nextReward) {
 		if (player->getStorageValue(storages.notifyReset) != static_cast<int32_t>(nextReward)) {
 			player->addStorageValue(storages.notifyReset, static_cast<int32_t>(nextReward));
@@ -396,6 +409,12 @@ void DailyRewards::loadDailyReward(const std::shared_ptr<Player> &player, DailyR
 		return;
 	}
 
+	const bool rewardTaken = isRewardTaken(player);
+	uint32_t nextRewardTime = getNextRewardTime(player);
+	if (rewardTaken && nextRewardTime == 0) {
+		nextRewardTime = static_cast<uint32_t>(std::time(nullptr) + serverTimeThreshold);
+	}
+
 	const uint8_t shrineFlag = source == DAILY_REWARD_FROM_SHRINE ? 1 : 0;
 	player->sendDailyRewardCollectionResource(0x15, getJokerTokens(player));
 	player->sendDailyRewardCollectionResource(0x14, getCollectionTokens(player));
@@ -405,11 +424,11 @@ void DailyRewards::loadDailyReward(const std::shared_ptr<Player> &player, DailyR
 		getDayStreak(player),
 		getJokerTokens(player),
 		getStreakLevel(player),
-		getNextRewardTime(player),
-		isRewardTaken(player),
+		nextRewardTime,
+		rewardTaken,
 		testMode
 	);
-	player->sendDailyRewardCollectionState(isRewardTaken(player) ? DAILY_REWARD_COLLECTED : DAILY_REWARD_NOTCOLLECTED);
+	player->sendDailyRewardCollectionState(rewardTaken ? DAILY_REWARD_COLLECTED : DAILY_REWARD_NOTCOLLECTED);
 }
 
 void DailyRewards::playerOpenRewardWall(const std::shared_ptr<Player> &player) {

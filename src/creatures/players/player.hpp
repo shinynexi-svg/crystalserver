@@ -344,6 +344,7 @@ public:
 	bool canSeeInvisibility() const override;
 
 	void setDailyReward(uint8_t reward);
+	uint8_t getDailyReward() const;
 
 	uint32_t getCollectionTokens() const;
 	void setCollectionTokens(uint32_t value);

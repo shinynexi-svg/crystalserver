@@ -8887,16 +8887,19 @@ void ProtocolGame::sendOpenRewardWall(uint8_t shrine, uint8_t dayStreak, uint16_
 		return;
 	}
 
+	const uint32_t now = static_cast<uint32_t>(std::time(nullptr));
+	const bool collected = rewardTaken || nextRewardTime > now || (player && player->getDailyReward() == DAILY_REWARD_COLLECTED);
+
 	NetworkMessage msg;
 	msg.addByte(0xE2);
 	msg.addByte(shrine);
-	if (testMode || !rewardTaken) {
+	if (testMode || !collected) {
 		msg.add<uint32_t>(0);
 	} else {
 		msg.add<uint32_t>(nextRewardTime);
 	}
 	msg.addByte(dayStreak);
-	if (rewardTaken) {
+	if (collected) {
 		msg.addByte(1);
 		msg.addString("Sorry, you have already taken your daily reward or you are unable to collect it.");
 		if (jokerTokens > 0) {

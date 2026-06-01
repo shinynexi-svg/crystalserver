@@ -4613,6 +4613,10 @@ void Player::setDailyReward(uint8_t reward) {
 	this->isDailyReward = reward;
 }
 
+uint8_t Player::getDailyReward() const {
+	return isDailyReward;
+}
+
 uint32_t Player::getCollectionTokens() const {
 	return std::max<int32_t>(0, getStorageValue(g_dailyRewards().getStorages().collectionTokens));
 }
