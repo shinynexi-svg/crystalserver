@@ -370,20 +370,22 @@ void DailyRewards::initPlayer(const std::shared_ptr<Player> &player) {
 	if (nextReward > 0 && now >= nextReward) {
 		if (player->getStorageValue(storages.notifyReset) != static_cast<int32_t>(nextReward)) {
 			player->addStorageValue(storages.notifyReset, static_cast<int32_t>(nextReward));
-			int32_t missedDays = static_cast<int32_t>(std::ceil(static_cast<double>(now - nextReward) / serverTimeThreshold));
-			if (missedDays < 0) {
-				missedDays = 0;
+			int32_t missedDays = 0;
+			if (now > static_cast<time_t>(nextReward)) {
+				missedDays = static_cast<int32_t>((now - static_cast<time_t>(nextReward)) / serverTimeThreshold);
 			}
-			if (getJokerTokens(player) >= static_cast<uint32_t>(missedDays) && missedDays > 0) {
-				setJokerTokens(player, static_cast<int32_t>(getJokerTokens(player) - missedDays));
-				player->sendTextMessage(MESSAGE_LOGIN, fmt::format("You lost {} joker tokens to prevent loosing your streak.", missedDays));
-			} else {
-				setStreakLevel(player, 0);
-				if (player->getLastLoginSaved() > 0) {
-					if (getJokerTokens(player) > 0) {
-						setJokerTokens(player, 0);
+			if (missedDays > 0) {
+				if (getJokerTokens(player) >= static_cast<uint32_t>(missedDays)) {
+					setJokerTokens(player, static_cast<int32_t>(getJokerTokens(player) - missedDays));
+					player->sendTextMessage(MESSAGE_LOGIN, fmt::format("You lost {} joker tokens to prevent loosing your streak.", missedDays));
+				} else {
+					setStreakLevel(player, 0);
+					if (player->getLastLoginSaved() > 0) {
+						if (getJokerTokens(player) > 0) {
+							setJokerTokens(player, 0);
+						}
+						player->sendTextMessage(MESSAGE_LOGIN, "You just lost your daily reward streak.");
 					}
-					player->sendTextMessage(MESSAGE_LOGIN, "You just lost your daily reward streak.");
 				}
 			}
 		}
