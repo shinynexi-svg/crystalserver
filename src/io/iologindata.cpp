@@ -34,7 +34,7 @@ bool IOLoginData::gameWorldAuthentication(const std::string &accountDescriptor, 
 	Account account(accountDescriptor);
 	account.setProtocolCompat(oldProtocol);
 
-	if (AccountErrors_t::Ok != account.load()) {
+	if (AccountErrors_t::Ok != enumFromValue<AccountErrors_t>(account.load())) {
 		g_logger().error("Couldn't load account [{}].", account.getDescriptor());
 		return false;
 	}
@@ -54,13 +54,13 @@ bool IOLoginData::gameWorldAuthentication(const std::string &accountDescriptor, 
 		return false;
 	}
 
-	if (AccountErrors_t::Ok != account.load()) {
+	if (AccountErrors_t::Ok != enumFromValue<AccountErrors_t>(account.load())) {
 		g_logger().error("Failed to load account [{}]", accountDescriptor);
 		return false;
 	}
 
 	auto [players, result] = account.getAccountPlayers();
-	if (AccountErrors_t::Ok != result) {
+	if (AccountErrors_t::Ok != enumFromValue<AccountErrors_t>(result)) {
 		g_logger().error("Failed to load account [{}] players", accountDescriptor);
 		return false;
 	}
@@ -191,6 +191,9 @@ bool IOLoginData::loadPlayer(const std::shared_ptr<Player> &player, const DBResu
 		IOLoginDataLoad::loadPlayerInitializeSystem(player);
 		IOLoginDataLoad::loadPlayerUpdateSystem(player);
 
+		// Load exiva restrictions
+		IOLoginDataLoad::loadPlayerExivaRestrictions(player);
+
 		return true;
 	} catch (const std::system_error &error) {
 		g_logger().warn("[{}] Error while load player: {}", __FUNCTION__, error.what());
@@ -268,6 +271,14 @@ bool IOLoginData::savePlayerGuard(const std::shared_ptr<Player> &player) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerTaskHuntingClass] - Failed to save player task hunting class: " + player->getName());
 	}
 
+	if (!IOLoginDataSave::savePlayerBountyTasks(player)) {
+		throw DatabaseException("[IOLoginDataSave::savePlayerBountyTasks] - Failed to save player bounty tasks: " + player->getName());
+	}
+
+	if (!IOLoginDataSave::savePlayerWeeklyTasks(player)) {
+		throw DatabaseException("[IOLoginDataSave::savePlayerWeeklyTasks] - Failed to save player weekly tasks: " + player->getName());
+	}
+
 	if (!IOLoginDataSave::savePlayerForgeHistory(player)) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerForgeHistory] - Failed to save player forge history: " + player->getName());
 	}
@@ -284,6 +295,7 @@ bool IOLoginData::savePlayerGuard(const std::shared_ptr<Player> &player) {
 	player->wheel()->saveActiveGems();
 	player->wheel()->saveKVModGrades();
 	player->wheel()->saveKVScrolls();
+	player->wheel()->saveKVHuntingTaskShopExtraPoints();
 
 	if (!IOLoginDataSave::savePlayerStorage(player)) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerStorage] - Failed to save player storage: " + player->getName());

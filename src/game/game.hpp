@@ -26,6 +26,7 @@
 #include "map/map.hpp"
 #include "modal_window/modal_window.hpp"
 #include "movement/position.hpp"
+#include "creatures/creatures_definitions.hpp"
 
 // Forward declaration for protobuf class
 namespace Crystal {
@@ -133,6 +134,10 @@ public:
 	 */
 	void loadCustomMaps(const std::filesystem::path &customMapPath);
 	void loadMap(const std::string &path, const Position &pos = Position());
+
+	uint64_t getLastMapLoadTime() const {
+		return lastMapLoadTime;
+	}
 
 	void getMapDimensions(uint32_t &width, uint32_t &height) const {
 		width = map.width;
@@ -284,7 +289,25 @@ public:
 	void kickPlayer(uint32_t playerId, bool displayEffect);
 	void playerReportBug(uint32_t playerId, const std::string &message, const Position &position, uint8_t category);
 	void playerPreyAction(uint32_t playerId, uint8_t slot, uint8_t action, uint8_t option, int8_t index, uint16_t raceId);
-	void playerTaskHuntingAction(uint32_t playerId, uint8_t slot, uint8_t action, bool upgrade, uint16_t raceId);
+	void playerSoulSealsFight(uint32_t playerId, uint16_t raceId);
+
+	// Winter Update 2025 — Task Board
+	void playerOpenBountyTask(uint32_t playerId);
+	void playerOpenWeeklyTask(uint32_t playerId);
+	void playerOpenHuntingTaskShop(uint32_t playerId);
+	void playerBountyTaskChangeDifficulty(uint32_t playerId, uint8_t difficulty);
+	void playerBountyTaskClaimReroll(uint32_t playerId);
+	void playerBountyTaskReroll(uint32_t playerId);
+	void playerBountyTaskSelectTask(uint32_t playerId, uint8_t taskIndex);
+	void playerBountyTaskSetPreferred(uint32_t playerId, uint8_t listType, uint8_t slot, uint16_t raceId);
+	void playerBountyTaskSetUnwanted(uint32_t playerId, uint8_t listType, uint8_t slot, uint16_t raceId);
+	void playerBountyTaskClaimReward(uint32_t playerId);
+	void playerBountyTaskUpgradeTalisman(uint32_t playerId, uint8_t pathIndex);
+	void playerBountyTaskBuyShopOffer(uint32_t playerId, uint8_t offerIndex);
+	void playerBountyTaskUnlockListSlot(uint32_t playerId, uint8_t slot);
+	void playerWeeklyTasksRegenerate(uint32_t playerId, uint8_t difficulty);
+	void playerWeeklyTaskDeliver(uint32_t playerId, uint8_t taskIndex);
+
 	void playerNpcGreet(uint32_t playerId, uint32_t npcId);
 	void playerAnswerModalWindow(uint32_t playerId, uint32_t modalWindowId, uint8_t button, uint8_t choice);
 	void playerForgeFuseItems(
@@ -347,6 +370,7 @@ public:
 	void broadcastMessage(const std::string &text, MessageClasses type) const;
 
 	// Implementation of player invoked events
+	void playerChangeVocation(uint32_t playerId, const uint8_t newVocation);
 	void playerTeleport(uint32_t playerId, const Position &pos);
 	void playerMoveThing(uint32_t playerId, const Position &fromPos, uint16_t itemId, uint8_t fromStackPos, const Position &toPos, uint8_t count);
 	void playerMoveCreatureByID(uint32_t playerId, uint32_t movingCreatureId, const Position &movingCreatureOrigPos, const Position &toPos);
@@ -523,7 +547,7 @@ public:
 	int32_t applyHealthChange(const CombatDamage &damage, const std::shared_ptr<Creature> &target) const;
 
 	bool combatChangeHealth(const std::shared_ptr<Creature> &attacker, const std::shared_ptr<Creature> &target, CombatDamage &damage, bool isEvent = false);
-	void applyCharmRune(const std::shared_ptr<Monster> &targetMonster, const std::shared_ptr<Player> &attackerPlayer, const std::shared_ptr<Creature> &target, const int32_t &realDamage) const;
+	void applyOffensiveCharmRune(const std::shared_ptr<Monster> &targetMonster, const std::shared_ptr<Player> &attackerPlayer, const std::shared_ptr<Creature> &target, const int32_t &realDamage) const;
 	void applyManaLeech(
 		const std::shared_ptr<Player> &attackerPlayer, const std::shared_ptr<Monster> &targetMonster,
 		const std::shared_ptr<Creature> &target, const CombatDamage &damage, const int32_t &realDamage
@@ -541,12 +565,16 @@ public:
 	void addPlayerMana(const std::shared_ptr<Player> &target);
 	void addPlayerVocation(const std::shared_ptr<Player> &target);
 	void addMagicEffect(const Position &pos, uint16_t effect);
+	void addMagicEffect(const Position &pos, uint16_t effect, const std::shared_ptr<Creature> &actor);
 	static void addMagicEffect(const std::vector<std::shared_ptr<Player>> &players, const Position &pos, uint16_t effect);
 	static void addMagicEffect(const CreatureVector &spectators, const Position &pos, uint16_t effect);
+	static void addMagicEffect(const CreatureVector &spectators, const Position &pos, uint16_t effect, const std::shared_ptr<Creature> &actor);
 	void removeMagicEffect(const Position &pos, uint16_t effect);
 	static void removeMagicEffect(const CreatureVector &spectators, const Position &pos, uint16_t effect);
 	void addDistanceEffect(const Position &fromPos, const Position &toPos, uint16_t effect);
+	void addDistanceEffect(const Position &fromPos, const Position &toPos, uint16_t effect, const std::shared_ptr<Creature> &actor);
 	static void addDistanceEffect(const CreatureVector &spectators, const Position &fromPos, const Position &toPos, uint16_t effect);
+	static void addDistanceEffect(const CreatureVector &spectators, const Position &fromPos, const Position &toPos, uint16_t effect, const std::shared_ptr<Creature> &actor);
 
 	void startDecay(const std::shared_ptr<Item> &item);
 	void stopDecay(const std::shared_ptr<Item> &item);
@@ -571,6 +599,7 @@ public:
 	}
 
 	void sendOfflineTrainingDialog(const std::shared_ptr<Player> &player);
+	void playerStartOfflineTraining(uint32_t playerId, skills_t skill);
 
 	const std::map<uint16_t, std::map<uint8_t, uint64_t>> &getItemsPrice() const {
 		return itemsPriceMap;
@@ -647,7 +676,7 @@ public:
 	}
 
 	void playerInspectItem(const std::shared_ptr<Player> &player, const Position &pos);
-	void playerInspectItem(const std::shared_ptr<Player> &player, uint16_t itemId, uint8_t itemCount, bool cyclopedia);
+	void playerInspectItem(const std::shared_ptr<Player> &player, uint16_t itemId, uint8_t itemCount, uint8_t inspectionType);
 
 	void addCharmRune(const std::shared_ptr<Charm> &charm) {
 		CharmList.push_back(charm);
@@ -687,12 +716,18 @@ public:
 	bool removeInfluencedMonster(uint32_t id, bool create = false);
 	bool removeFiendishMonster(uint32_t id, bool create = true);
 	void updateFiendishMonsterStatus(uint32_t monsterId, const std::string &monsterName);
+	void updateInfluencedMonsterStatus(uint32_t monsterId, const std::string &monsterName);
 	void createFiendishMonsters();
-	void createInfluencedMonsters();
+	void createInfluencedMonsters(bool scheduleEvent = true);
 	void updateForgeableMonsters();
 	void checkForgeEventId(uint32_t monsterId);
 	uint32_t makeFiendishMonster(uint32_t forgeableMonsterId = 0, bool createForgeableMonsters = false);
 	uint32_t makeInfluencedMonster();
+	void batchRefreshInfluencedMonsters();
+	void scheduleInfluencedMonstersUpdate();
+
+	uint32_t getFiendishLimit() const;
+	uint32_t getInfluencedLimit() const;
 
 	bool addInfluencedMonster(const std::shared_ptr<Monster> &monster);
 	void sendUpdateCreature(const std::shared_ptr<Creature> &creature);
@@ -786,6 +821,7 @@ private:
 	std::map<uint32_t, int32_t> forgeMonsterEventIds;
 	std::unordered_set<uint32_t> fiendishMonsters;
 	std::unordered_set<uint32_t> influencedMonsters;
+	uint64_t influencedMonstersEventId = 0;
 
 	bool playerSaySpell(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &text, uint16_t channelId);
 	void playerWhisper(const std::shared_ptr<Player> &player, const std::string &text);
@@ -923,6 +959,8 @@ private:
 	// (1440 total light of tibian day)/(3600 real seconds each tibian day) * 10 seconds event interval
 	int32_t lightHourDelta = (LIGHT_DAY_LENGTH * (EVENT_LIGHTINTERVAL_MS / 1000)) / DAY_LENGTH_SECONDS;
 
+	uint64_t lastMapLoadTime = 0;
+
 	ServiceManager* serviceManager = nullptr;
 
 	void updatePlayersRecord() const;
@@ -946,7 +984,7 @@ private:
 	void updatePlayerPartyHuntAnalyzer(const CombatDamage &damage, const std::shared_ptr<Player> &player) const;
 
 	void sendEffects(
-		const std::shared_ptr<Creature> &target, const CombatDamage &damage, const Position &targetPos,
+		const std::shared_ptr<Creature> &attacker, const std::shared_ptr<Creature> &target, const CombatDamage &damage, const Position &targetPos,
 		TextMessage &message, const CreatureVector &spectators
 	);
 

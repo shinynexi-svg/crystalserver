@@ -1177,7 +1177,7 @@ Storage = {
 		},
 		U8_4 = { -- update 8.4 - Reserved Storages 41901 - 42145
 			BloodBrothers = {
-				QuestLine = 41901,
+				Trust = 41901,
 				Mission01 = 41902,
 				-- unused GarlicBread = 41903,
 				Mission02 = 41904,
@@ -1191,6 +1191,43 @@ Storage = {
 				Mission03 = 41910,
 				Mission04 = 41911,
 				VengothAccess = 41912,
+				Mission05 = 41913,
+				Mission06 = 41914,
+				Mission07 = 41915,
+				Mission08 = 41916,
+				Mission09 = 41917,
+				Mission10 = 41918,
+				CastleEntranceSTG = 41919,
+				CastleBook = 41920,
+				BloodCrystalDoor = 41921,
+				CastleHiddenEntrance = 41922,
+				LibraryDoor = 41923,
+				BorethDoor = 41924,
+				LersatioDoor = 41926,
+				Arthei_Marziel_Door = 41928,
+				ArtheiDoor = 41930,
+				DiarySTG = 41932,
+				DiaryPage2 = 41942,
+				DiaryPage3 = 41943,
+				DiaryPage4 = 41944,
+				DiaryPage5 = 41945,
+				DiaryPage6 = 41946,
+				DiaryPage7 = 41947,
+				MapCompleted = 41948,
+				MapMarks_CastleEntrance = 41933,
+				MapMarks = 41934,
+				MapMarks_BlackGap = 41935,
+				MapMarks_BoneTotems = 41936,
+				MapMarks_HauntedRuins = 41937,
+				MapMarks_LonelyGrave = 41938,
+				MapMarks_BurningTrees = 41939,
+				MapMarks_OldShrine = 41940,
+				MapMarks_CastleGarden = 41941,
+				Plant1 = 144226,
+				Plant2 = 144227,
+				Plant3 = 144228,
+				BloodGoblet = 144229,
+				MirrorCounter = 144230,
 			},
 			InServiceOfYalahar = {
 				TheWayToYalahar = 41950,
@@ -2335,6 +2372,7 @@ Storage = {
 				DiamondServant = 45508,
 				AstralPowerCounter = 45509,
 				AstralGlyph = 45510,
+				ForbiddenFruit = 193226,
 			},
 		},
 		U11_40 = { -- update 11.40 - Reserved Storages 45651 - 45850
@@ -2407,7 +2445,7 @@ Storage = {
 			ThreatenedDreams = { -- 45751 - 45850
 				QuestLine = 45751,
 				Mission01 = {
-					45752, -- Troubled Animals
+					TroubledAnimals = 45752,
 					PoacherChest = 45753,
 					PoacherNotes = 45754,
 					FeathersCount = 45755,
@@ -2418,7 +2456,7 @@ Storage = {
 					Feathers5 = 45760,
 				},
 				Mission02 = {
-					45761, -- Nightmare Intruders
+					NightmareIntruders = 45761,
 					FrazzlemawsCount = 45762,
 					EnfeebledCount = 45763,
 					KroazurAccess = 45764,
@@ -2451,7 +2489,7 @@ Storage = {
 					StarlightPos05 = 45791,
 				},
 				Mission03 = {
-					45792, -- An Unlikely Couple
+					AnUnlikelyCouple = 45792,
 					UnlikelyCouple = 45793,
 					PanpipesTimer = 45794,
 					RavenHerbTimer = 45795,
@@ -2459,9 +2497,31 @@ Storage = {
 					EmptyStarlightVial = 45797,
 				},
 				Mission04 = {
-					45798,
+					ToothFairy = 45798,
+					PresentsPlaced = 45799,
+					TeethCollection = 45800,
+					BedThais = 45801,
+					BedVenore = 45802,
+					BedCarlin = 45803,
+					TiredTree = 45804,
+					GrumpyStone = 45805,
+					Stone1 = 45806,
+					Stone2 = 45807,
+					Stone3 = 45808,
+					Stone4 = 45809,
+					Stone5 = 45810,
 				},
-				Mission05 = 45799,
+				Mission05 = {
+					SwanFeatherCloak = 45811,
+					SwanFeatherCooldown01 = 45812,
+					SwanFeatherCooldown02 = 45813,
+					SwanFeatherCooldown03 = 45814,
+					SwanFeatherCooldown04 = 45815,
+					SwanFeatherCooldown05 = 45816,
+					SwanFeatherCooldown06 = 45817,
+					SwanFeatherCooldown07 = 45818,
+					SwanFeatherCooldown08 = 45819,
+				},
 			},
 		},
 		U11_50 = { -- update 11.50 - Reserved Storages 45851 - 46000
@@ -2589,7 +2649,7 @@ Storage = {
 				CorymRescued06 = 45985,
 				CorymRescued07 = 45986,
 				CorymRescued08 = 45987,
-				CorymRescueMission = 45988,
+				CorymCaveSpider = 45988,
 			},
 		},
 		U11_80 = { -- update 11.80 - Reserved Storages 46001 - 46300
@@ -2613,6 +2673,7 @@ Storage = {
 					Fragrance = 46016,
 				},
 				FalconBastion = {
+					Access = 46117,
 					Questline = 46017,
 					KillingBosses = 46018,
 					OberonTimer = 46019,
@@ -2767,10 +2828,12 @@ Storage = {
 					KingZelosKilled = 46877,
 					InquisitionOutfitReceived = 46878,
 				},
-				Cobra = 46864,
+				CobraBastion = {
+					Access = 46864,
+				},
+				HandOfTheInquisitionOutfits = {},
+				-- Kilmaresh = {}, done earlier in the file
 			},
-			HandOfTheInquisitionOutfits = {},
-			-- Kilmaresh = {}, done earlier in the file
 		},
 		U12_30 = { -- update 12.30 - Reserved Storages 47001 - 47200
 			FalconerOutfits = {},
@@ -2790,9 +2853,24 @@ Storage = {
 		U12_40 = { -- update 12.40 - Reserved Storages 47201 - 47500
 			RevenantOutfits = {},
 			TheOrderOfTheLion = {
-				QuestLine = 47401,
-				AccessEastSide = 47402,
+				Evrard = 47401,
+				AccessEasternSide = 47402,
 				AccessSouthernSide = 47403,
+				Parchment = 47404,
+				MapStorage = 47405,
+				BounacTrust = 47406,
+				WesTask = 47407,
+				JehanTask = 47408,
+				OnfroiKills = 47409,
+				OnfroiTask = 47410,
+				DalTask = 47411,
+				DalKills = 47412,
+				FralTask = 47413,
+				KesarSiegeTimer = 47414,
+				KesarMission = 47415,
+				FugueSpawnTime = 47416,
+				FugueSpawned = 47417,
+				AugustinDoor = 47418,
 			},
 			SoulWar = {
 				GoshnarMaliceKilled = 47211,
@@ -2813,6 +2891,13 @@ Storage = {
 				RascacoonShortcut = 47512,
 				TentuglyKilled = 47513,
 				TentuglyDoor = 47514,
+				Tentugly = {
+					Room = 47515,
+					Timer = 47516,
+				},
+				BathTub = 47517,
+				RatmiralKilled = 47518,
+				WaterIcon = 47519,
 			},
 			RascoohanOutfits = {},
 		},
@@ -2849,6 +2934,7 @@ Storage = {
 		U13_20 = { -- update 13.20 - Reserved Storages 47952 - 47970
 			RottenBlood = {
 				AccessDoor = 47952,
+				PutrefactoryTask = 47956,
 			},
 		},
 		U14_10 = { -- update 14.10 - Reserved Storages 47971 - 47975 reserved to 3 miniBosses (47976, 47977, 47978)
@@ -2901,6 +2987,16 @@ Storage = {
 				TheNextStep = 48005,
 				Bloodbath = 48006,
 			},
+		},
+		U15_12 = { -- update 15.12 - Reserved Storages 48031 - 48040
+			newhavenCitizen = 48031,
+			newhavenTutorialHunting = 48032,
+			newhavenNewLootTheCorruptor = 48033,
+			newhavenGoblinQuestStart = 48034,
+			newhavenGoblinQuestDone = 48035,
+			newhavenMuglexKillCount = 48036,
+			newhavenViolaBookQuestStart = 48037,
+			newhavenViolaBookQuestDone = 48038,
 		},
 	},
 
@@ -2992,6 +3088,7 @@ GlobalStorage = {
 			DarashiaNorth = 60192,
 			DarashiaWest = 60193,
 		},
+		ThawingMiniWorldChange = 67000,
 	},
 	TheDreamCourts = {
 		-- Reserved storage from 60194 - 60196

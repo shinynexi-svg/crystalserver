@@ -216,7 +216,7 @@ ChestUnique = {
 	-- Key 3667
 	[5016] = {
 		isKey = true,
-		itemId = 3204,
+		itemId = 4240,
 		itemPos = { x = 32576, y = 32216, z = 15 },
 		reward = { { 2969, 1 } },
 		storage = Storage.Quest.Key.ID3667,
@@ -2328,6 +2328,13 @@ ChestUnique = {
 		storage = Storage.Quest.U8_1.WhatAFoolishQuest.BagBookKnife,
 	},
 	-- The Inquisition Quest
+	[6500] = {
+		itemId = 2472,
+		itemPos = { x = 32316, y = 32260, z = 8 },
+		reward = { { 2821, 1 } },
+		weight = 13.00,
+		storage = Storage.Quest.U8_2.TheInquisitionQuest.RewardRoomText,
+	},
 	[6270] = {
 		itemId = 2472,
 		itemPos = { x = 32649, y = 31932, z = 1 },
@@ -2353,7 +2360,7 @@ ChestUnique = {
 	[6273] = {
 		itemId = 2469,
 		itemPos = { x = 32551, y = 32652, z = 10 },
-		reward = { { 7369, 1 } },
+		reward = { { 7870, 1 } },
 		weight = 5.00,
 		storage = Storage.Quest.U8_2.TheThievesGuildQuest.GoldenGoblet,
 	},
@@ -2980,6 +2987,39 @@ ChestUnique = {
 	[14042] = {
 		itemId = 2473,
 		itemPos = { x = 32099, y = 32198, z = 9 },
+	},
+	-- Blood Brothers Quest
+	[14043] = {
+		itemId = 2435,
+		itemPos = { x = 32961, y = 31471, z = 6 },
+	},
+	[14044] = {
+		itemId = 4285,
+		itemPos = { x = 32964, y = 31471, z = 2 },
+	},
+	[14045] = {
+		itemId = 2433,
+		itemPos = { x = 32943, y = 31471, z = 5 },
+	},
+	[14046] = {
+		itemId = 2435,
+		itemPos = { x = 32960, y = 31456, z = 6 },
+	},
+	[14047] = {
+		itemId = 2435,
+		itemPos = { x = 32939, y = 31459, z = 6 },
+	},
+	[14048] = {
+		itemId = 2438,
+		itemPos = { x = 32945, y = 31446, z = 6 },
+	},
+	[14051] = {
+		itemId = 1983,
+		itemPos = { x = 32953, y = 31440, z = 3 },
+	},
+	[14052] = {
+		itemId = 4285,
+		itemPos = { x = 32953, y = 31473, z = 4 },
 	},
 	-- The Outlaw Camp Quest (Bright Sword Quest)
 	[14091] = {

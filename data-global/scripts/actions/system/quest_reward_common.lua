@@ -37,12 +37,64 @@ They are fighting about power and influence but unity is the key to success. Our
 All our rituals and procedures rooted on unity and sharing, they can't neglect that.
 ]],
 	},
-	[6183] = {
+	[6250] = {
+		text = [[
+Damn you Thais! Damn you TBI! I am no longer an agent or a noble but a black knight. A dark avenger that will have his revenge!
+]],
+	},
+	[6179] = {
 		text = [[
 Looks like the fox is out!
 More luck next time!
 Signed:
 the horned fox
+]],
+	},
+	[6272] = {
+		text = [[
+Knight Brave: At last we meet face-to-face!
+Doctor Darkness: Too late, puny knight. You can't stop my master plan anymore!
+1st Knave: Watch out! It's a trap!
+Knight Brave: Don't quail, my faithful follower! We have mastered worse obstacles to get here!
+Doctor Darkness: Haha! You may not fear for your own life, but how about hers!?
+2nd Knave: Oh no! Look! It's Princess Buttercup! He's holding her hostage!
+Doctor Darkness: Indeed I do! Wouldn't it be a pity for such a beautiful young lady to die so tragically?
+Princess Buttercup: Don't care about me! Save the world!
+Doctor Darkness: Keep quiet! Else your hair will make the acquaintance of these scissors!
+All: You're such a monster!
+Doctor Darkness: Hahaha! Now drop your weapons or else...
+1st Knave: Never!
+2nd Knave: But what about the princess?
+Knight Brave: Trust me, my loyal minions. Drop your weapons.
+Doctor Darkness: At last! The brave Knight Brave in my hands! Your death is near!
+Knight Brave: Not that fast, Doctor Dumbness!
+Doctor Darkness: How dare you? Are you mad? I hold the princess hostage and you drop your weapons. You're all lost!
+Knight Brave: I don't think so, dear doctor!
+1st Knave: What's this? Behind the doctor?
+2nd Knave: Look! It's Lucky, the wonder dog!
+Lucky: Woof! Woof!
+Doctor Darkness: Noooooo!
+Knight Brave: Get him, boy!
+Lucky: Grrr!
+Doctor Darkness: Ahhhhhh!
+All: Hooray!
+Knight Brave: Lucky, once again you saved the day!
+Lucky: Woof!
+]],
+	},
+	[6500] = {
+		text = [[
+I
+
+It is of utmost importance to keep the subject unaware that he is under survey. To begin an inquiry it is necessary to start as casual as possible. The best thing to do is to ask 'how are you?' immediately after the exchange of greeting phrases. If the suspect answers that something troubles him, than immediately ask him about that subject. If not, ask the subject if he had any TROUBLE lately.
+
+II
+
+Next, ask him if he thinks that the AUTHORITIES will handle the subject that troubles him. If he states that the authorities will solve the trouble, ask him if he thinks that they could have AVOIDED the trouble in the first place. If he confirms that the trouble could have been avoided, he is to be observed for heretical tendencies. If the suspect has yet not shown any heretic opinion, ask him why he thinks that the GODS would ALLOW that such things are happening. If he claims that he doesn't know, it is implied that he doubts this godly decision and is to be observed for heretical tendencies. If he comes up with an explanation that suggests that the gods lack the power to prevent that such a thing happens, than he is to be observed for heretical tendencies as well. If he answers that only the gods know the answer or that the gods had some plausible reason, like testing humanity, he may have no heretical tendencies at all.
+
+III
+
+If the suspect claims that he has no trouble at all, ask him if he thinks that the lack of trouble is explained by the FORESIGHT of the AUTHORITIES. If he denies, he is to be observed for heretical tendencies. If he agrees, ask him if he thinks that it is ALSO for the GODS' will that he has no trouble. If he disagrees, he is to be observed for heretical tendencies. If the subject does not show any suspicious behaviour at this point, ask him if he thinks that any TROUBLE will arise in the near FUTURE. If he negates, he obviously will become lax in the line of his duty and he is to be observed for heretical tendencies. If he confirms that trouble might arise, continue as in paragraph II.
 ]],
 	},
 }

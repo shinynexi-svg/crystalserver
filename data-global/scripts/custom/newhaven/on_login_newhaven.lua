@@ -1,0 +1,20 @@
+local newhavenOnLogin = CreatureEvent("NewhavenOnLogin")
+
+function newhavenOnLogin.onLogin(player)
+	if not player then
+		return false
+	end
+
+	if player:getVocation():getId() == VOCATION_NONE then
+		player:teleportTo(Position(32534, 32513, 7))
+		player:setStorageValue(Storage.Quest.U15_12.newhavenCitizen, 1)
+	end
+
+	if player:getStorageValue(Storage.Quest.U15_12.newhavenCitizen) == 1 then
+		player:registerEvent("onDeathNewhaven")
+	end
+
+	return true
+end
+
+newhavenOnLogin:register()

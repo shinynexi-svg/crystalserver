@@ -97,7 +97,7 @@ monster.loot = {
 	{ name = "lost basher's spike", chance = 17260 },
 	{ name = "lost basher's spike", chance = 14380 },
 	{ name = "bloody dwarven beard", chance = 1730 },
-	{ name = "pair of iron fists", chance = 1410 },
+	{ name = "pair of iron fists", chance = 1500 },
 	{ name = "buckle", chance = 10930 },
 	{ name = "bonecarving knife", chance = 7320 },
 	{ name = "basalt fetish", chance = 8800 },

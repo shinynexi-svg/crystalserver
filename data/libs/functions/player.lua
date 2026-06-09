@@ -4,7 +4,9 @@ local foodCondition = Condition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
 function Player.feed(self, food)
 	local condition = self:getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
 	if condition then
-		condition:setTicks(condition:getTicks() + (food * 1000))
+		local newTicks = math.min(condition:getTicks() + (food * 1000), 1200000)
+		condition:setTicks(newTicks)
+		condition:setParameter(CONDITION_PARAM_FOODTICKS, newTicks)
 	else
 		local vocation = self:getVocation()
 		if not vocation then
@@ -12,6 +14,7 @@ function Player.feed(self, food)
 		end
 
 		foodCondition:setTicks(food * 1000)
+		foodCondition:setParameter(CONDITION_PARAM_FOODTICKS, food * 1000)
 		foodCondition:setParameter(CONDITION_PARAM_HEALTHGAIN, vocation:getHealthGainAmount())
 		foodCondition:setParameter(CONDITION_PARAM_HEALTHTICKS, vocation:getHealthGainTicks())
 		foodCondition:setParameter(CONDITION_PARAM_MANAGAIN, vocation:getManaGainAmount())
@@ -349,6 +352,10 @@ function Player:CreateFamiliarSpell(spellId)
 
 	local createdSuccessfully = self:createFamiliar(familiarName, summonDuration)
 	if createdSuccessfully then
+		local summons = self:getSummons()
+		for _, summon in ipairs(summons) do
+			summon:registerEvent("PartyProtection")
+		end
 		condition:setTicks(1000 * cooldown / configManager.getFloat(configKeys.RATE_SPELL_COOLDOWN))
 		self:addCondition(condition)
 		return true

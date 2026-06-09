@@ -1554,14 +1554,6 @@ GameStore.Categories = {
 				type = GameStore.OfferTypes.OFFER_TYPE_MOUNT,
 			},
 			{
-				icons = { "Foxmouse.png" },
-				name = "Foxmouse",
-				price = 750,
-				id = 218,
-				description = "{character}\n{speedboost}\n\n<i>A wild, ancient creature, which had been hiding in the depths of the shadows for a very long time, has been spotted in Tibia again! The almighty Shadow Draptor has returned and only the bravest Tibians can control such a beast!</i>",
-				type = GameStore.OfferTypes.OFFER_TYPE_MOUNT,
-			},
-			{
 				icons = { "Frostbringer.png" },
 				name = "Frostbringer",
 				price = 750,
@@ -6576,11 +6568,11 @@ GameStore.Categories = {
 			},
 			{
 				icons = { "Permanent_Hunting_Task_Slot.png" },
-				name = "Permanent Hunting Task Slot",
-				price = 900,
-				id = GameStore.SubActions.TASKHUNTING_THIRDSLOT,
-				description = "<i>Get an additional hunting tasks slot to activate additional hunting task!</i>\n\n{character}\n{info} maximum amount that can be owned by character: 3\n{info} added directly to Hunting Task dialog",
-				type = GameStore.OfferTypes.OFFER_TYPE_HUNTINGSLOT,
+				name = "Permanent Weekly Task Expansion",
+				price = 450,
+				id = GameStore.SubActions.WEEKLY_TASK_EXPANSION,
+				description = "<i>Permanently expands your weekly tasks from 6 to 9 task slots for both kill and delivery tasks!</i>\n\n{character}\n{once}\n{info} added directly to Task Board",
+				type = GameStore.OfferTypes.OFFER_TYPE_WEEKLYTASKEXPANSION,
 			},
 			{
 				icons = { "Gold_Converter.png" },

@@ -93,7 +93,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		end
 	else
 		if player:getStorageValue(TheNewFrontier.Questline) == 14 and player:getStorageValue(TheNewFrontier.Mission05.Telas) == 1 then
-			npcHandler:say("Wrong Word.", npc, creature)
+			npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
 			player:setStorageValue(TheNewFrontier.Mission05.Telas, 2)
 		end
 	end
@@ -141,5 +141,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

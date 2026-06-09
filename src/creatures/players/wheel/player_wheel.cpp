@@ -1163,9 +1163,9 @@ PlayerWheelGem &PlayerWheel::getGem(const std::string &uuid) {
 }
 
 uint16_t PlayerWheel::getGemIndex(const std::string &uuid) const {
-	for (uint16_t i = 0; i < m_revealedGems.size(); ++i) {
+	for (size_t i = 0; i < m_revealedGems.size(); ++i) {
 		if (m_revealedGems[i].uuid == uuid) {
-			return i;
+			return static_cast<uint16_t>(i);
 		}
 	}
 	g_logger().error("[{}] Failed to find gem with uuid {}", __FUNCTION__, uuid);
@@ -1369,7 +1369,7 @@ void PlayerWheel::addGems(NetworkMessage &msg) const {
 }
 
 void PlayerWheel::addGradeModifiers(NetworkMessage &msg) const {
-	msg.addByte(0x2E); // Modifiers for all Vocations
+	msg.addByte(46); // Modifiers for all Vocations
 
 	for (const auto &modPosition : modsBasicPosition) {
 		const auto pos = static_cast<uint8_t>(modPosition);
@@ -1377,7 +1377,7 @@ void PlayerWheel::addGradeModifiers(NetworkMessage &msg) const {
 		msg.addByte(m_basicGrades[pos]);
 	}
 
-	msg.addByte(0x17); // Modifiers for specific per Vocations
+	msg.addByte(23); // Modifiers for specific per Vocations
 
 	const auto vocationBaseId = m_player.getVocation()->getBaseId();
 	const auto modsSupremeIt = modsSupremePositionByVocation.find(vocationBaseId);
@@ -1503,6 +1503,7 @@ void PlayerWheel::sendOpenWheelWindow(NetworkMessage &msg, uint32_t ownerId) {
 	}
 	addPromotionScrolls(msg);
 	msg.addByte(hasMonkQuest() ? 10 : 0); // The Way of The Monk Quest
+	msg.add<uint16_t>(getExtraPointsFromHuntingTaskShop());
 	addGems(msg);
 	addGradeModifiers(msg);
 
@@ -1785,6 +1786,28 @@ void PlayerWheel::saveKVScrolls() const {
 	}
 }
 
+void PlayerWheel::loadKVHuntingTaskShopExtraPoints() {
+	const auto &pointsKv = m_player.kv()->scoped("wheel-of-destiny");
+	if (!pointsKv) {
+		return;
+	}
+
+	const auto value = pointsKv->get("hunting-task-shop-extra-points");
+	if (value && value.has_value()) {
+		auto extraPoints = value->getNumber();
+		m_extraPointsFromHuntingTaskShop = extraPoints > 0 ? static_cast<uint16_t>(extraPoints) : 0;
+	}
+}
+
+void PlayerWheel::saveKVHuntingTaskShopExtraPoints() const {
+	const auto &pointsKv = m_player.kv()->scoped("wheel-of-destiny");
+	if (!pointsKv) {
+		return;
+	}
+
+	pointsKv->set("hunting-task-shop-extra-points", m_extraPointsFromHuntingTaskShop);
+}
+
 void PlayerWheel::loadKVModGrades() {
 	for (const auto &modPosition : modsBasicPosition) {
 		const auto pos = static_cast<uint8_t>(modPosition);
@@ -1913,13 +1936,30 @@ uint16_t PlayerWheel::getExtraPoints() const {
 	return totalBonus;
 }
 
+uint16_t PlayerWheel::getExtraPointsFromHuntingTaskShop() const {
+	if (m_player.getLevel() < 51) {
+		return 0;
+	}
+
+	return m_extraPointsFromHuntingTaskShop;
+}
+
+void PlayerWheel::addExtraPointsFromHuntingTaskShop(uint16_t amount) {
+	if (amount == 0) {
+		return;
+	}
+
+	const uint32_t total = static_cast<uint32_t>(m_extraPointsFromHuntingTaskShop) + amount;
+	m_extraPointsFromHuntingTaskShop = static_cast<uint16_t>(std::min<uint32_t>(total, std::numeric_limits<uint16_t>::max()));
+}
+
 uint16_t PlayerWheel::getWheelPoints(bool includeExtraPoints /* = true*/) const {
 	const uint32_t level = m_player.getLevel();
 	auto totalPoints = std::max(0u, (level - m_minLevelToStartCountPoints)) * m_pointsPerLevel;
 
 	if (includeExtraPoints) {
-		const auto extraPoints = getExtraPoints();
-		totalPoints += extraPoints;
+		totalPoints += getExtraPoints();
+		totalPoints += getExtraPointsFromHuntingTaskShop();
 	}
 
 	return totalPoints;
@@ -2155,12 +2195,12 @@ void PlayerWheel::registerPlayerBonusData() {
 		}
 		if (m_playerBonusData.stages.divineGrenade >= 2) {
 			WheelSpells::Bonus bonus;
-			bonus.decrease.cooldown = 4 * 1000;
+			bonus.decrease.cooldown = 6 * 1000;
 			addSpellBonus("Divine Grenade", bonus);
 		}
 		if (m_playerBonusData.stages.divineGrenade >= 3) {
 			WheelSpells::Bonus bonus;
-			bonus.decrease.cooldown = 6 * 1000;
+			bonus.decrease.cooldown = 4 * 1000;
 			addSpellBonus("Divine Grenade", bonus);
 		}
 	} else {

@@ -34,6 +34,17 @@ Weapons &Weapons::getInstance() {
 	return inject<Weapons>();
 }
 
+namespace {
+	/** 15.12+ weapon swing: same as Tibia Global — effect anchored on the target tile; client picks direction. */
+	void sendWeaponAttackEffect(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &target, uint16_t effect) {
+		if (!player || !target || effect == CONST_ME_NONE) {
+			return;
+		}
+
+		g_game().addMagicEffect(target->getPosition(), effect, player);
+	}
+} // namespace
+
 WeaponShared_ptr Weapons::getWeapon(const std::shared_ptr<Item> &item) const {
 	if (!item) {
 		return nullptr;
@@ -230,18 +241,56 @@ bool Weapon::useFist(const std::shared_ptr<Player> &player, const std::shared_pt
 	params.blockedByArmor = true;
 	params.blockedByShield = true;
 	params.soundImpactEffect = SoundEffect_t::HUMAN_CLOSE_ATK_FIST;
+	params.impactEffect = CONST_ME_NONE;
 
 	CombatDamage damage;
 	damage.origin = ORIGIN_MELEE;
 	damage.primary.type = params.combatType;
 	damage.primary.value = -normal_random(0, maxDamage);
 
+	sendWeaponAttackEffect(player, target, CONST_ME_FIST_ATTACK);
 	Combat::doCombatHealth(player, target, damage, params);
 	if (!player->hasFlag(PlayerFlags_t::NotGainSkill) && player->getAddAttackSkill()) {
 		player->addSkillAdvance(SKILL_FIST, 1);
 	}
 
 	return true;
+}
+
+uint16_t Weapon::getWeaponAttackEffect(const std::shared_ptr<Item> &item, const std::shared_ptr<Player> &player) const {
+	if (!item) {
+		return CONST_ME_FIST_ATTACK; // Fist attack when no weapon
+	}
+
+	const WeaponType_t weaponType = item->getWeaponType();
+	const int32_t slotPosition = item->getSlotPosition();
+	const bool isTwoHanded = (slotPosition & SLOTP_TWO_HAND) != 0;
+
+	// Determine attack effect based on weapon type
+	switch (weaponType) {
+		case WEAPON_SWORD:
+			return CONST_ME_SWORD_ATTACK;
+
+		case WEAPON_CLUB:
+			// Two-handed clubs can be monk staves
+			if (isTwoHanded) {
+				return CONST_ME_MONK_STAFF_ATTACK;
+			}
+			return CONST_ME_CLUB_ATTACK;
+
+		case WEAPON_AXE:
+			// One-handed axes can be monk daggers/kamas
+			if (!isTwoHanded) {
+				return CONST_ME_MONK_DAGGERS_ATTACK;
+			}
+			return CONST_ME_AXE_ATTACK;
+
+		case WEAPON_FIST:
+			return CONST_ME_FIST_ATTACK;
+
+		default:
+			return CONST_ME_NONE;
+	}
 }
 
 void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, const std::shared_ptr<Creature> &target, int32_t damageModifier, int32_t cleavePercent) const {
@@ -251,6 +300,11 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		} else {
 			g_game().sendDoubleSoundEffect(player->getPosition(), params.soundCastEffect, params.soundImpactEffect, player);
 		}
+	}
+
+	// Native client weapon swing (15.x): effect on target tile (Tibia Global behavior)
+	if (cleavePercent == 0) {
+		sendWeaponAttackEffect(player, target, getWeaponAttackEffect(item, player));
 	}
 
 	if (isLoadedScriptId()) {
@@ -276,7 +330,12 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		damage.secondary.type = getElementType();
 
 		const int32_t totalDamage = (getWeaponDamage(player, target, item) * damageModifier) / 100;
-		const int32_t physicalAttack = item->getAttack();
+		int32_t physicalAttack = item->getAttack();
+		const uint8_t extraProficiencyAttack = player->getEquippedWeaponProficiency().attack;
+		if (extraProficiencyAttack > 0) {
+			physicalAttack += extraProficiencyAttack;
+		}
+
 		const int32_t elementalAttack = getElementDamageValue();
 		const int32_t combinedAttack = physicalAttack + elementalAttack;
 		if (elementalAttack > 0) {
@@ -303,9 +362,16 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		}
 
 		// Handle chain system
-		if (player->checkChainSystem() && params.chainCallback) {
-			m_combat->doCombatChain(player, target, params.aggressive);
-			g_logger().debug("Weapon::internalUseWeapon - Chain callback executed.");
+		if (player->checkChainSystem()) {
+			const auto &selfWeapon = g_weapons().getWeapon(item);
+			if (selfWeapon) {
+				m_combat->setupChain(selfWeapon);
+			}
+			if (!m_combat->doCombatChain(player, target, params.aggressive)) {
+				Combat::doCombatHealth(player, target, damage, params);
+			} else {
+				g_logger().debug("Weapon::internalUseWeapon - Chain executed with distance effects.");
+			}
 		} else {
 			Combat::doCombatHealth(player, target, damage, params);
 		}
@@ -641,7 +707,12 @@ int16_t WeaponMelee::getElementDamageValue() const {
 
 int32_t WeaponMelee::getWeaponDamage(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &, const std::shared_ptr<Item> &item, bool maxDamage /*= false*/) const {
 	const int32_t attackSkill = player->getWeaponSkill(item);
-	const int32_t physicalAttack = std::max<int32_t>(0, item->getAttack());
+	int32_t physicalAttack = std::max<int32_t>(0, item->getAttack());
+	const uint8_t extraProficiencyAttack = player->getEquippedWeaponProficiency().attack;
+	if (extraProficiencyAttack > 0) {
+		physicalAttack += extraProficiencyAttack;
+	}
+
 	const int32_t elementalAttack = getElementDamageValue();
 	const int32_t combinedAttack = physicalAttack + elementalAttack;
 
@@ -827,6 +898,10 @@ bool WeaponDistance::useWeapon(const std::shared_ptr<Player> &player, const std:
 		}
 	}
 
+	if (player->getLevel() < 20) {
+		chance += 50;
+	}
+
 	// Proficiency Perk: rangedHitChance
 	const float rangedHitChance = player->getEquippedWeaponProficiency().rangedHitChance;
 	if (rangedHitChance > 0) {
@@ -914,6 +989,11 @@ int32_t WeaponDistance::getWeaponDamage(const std::shared_ptr<Player> &player, c
 		}
 	}
 
+	const uint8_t extraProficiencyAttack = player->getEquippedWeaponProficiency().attack;
+	if (extraProficiencyAttack > 0) {
+		attackValue += extraProficiencyAttack;
+	}
+
 	const int32_t attackSkill = player->getSkillLevel(SKILL_DISTANCE);
 	const float attackFactor = player->getAttackFactor();
 
@@ -975,47 +1055,7 @@ void WeaponWand::configureWeapon(const ItemType &it) {
 }
 
 int32_t WeaponWand::getWeaponDamage(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &, const std::shared_ptr<Item> &, bool maxDamage /* = false*/) const {
-	if (!player->checkChainSystem()) {
-		float multiplier = 1.0f;
-		auto vocation = player->getVocation();
-		if (vocation) {
-			multiplier = vocation->wandRodDamageMultiplier;
-		}
-
-		auto maxValue = static_cast<int32_t>(maxChange * multiplier);
-
-		// Returns maximum damage or a random value between minChange and maxChange
-		return maxDamage ? -maxValue : -normal_random(minChange, maxValue);
-	}
-
-	if (!g_configManager().getBoolean(CHAIN_SYSTEM_MODIFY_MAGIC)) {
-		return maxDamage ? -maxChange : -normal_random(minChange, maxChange);
-	}
-
-	// If chain system is enabled, calculates magic-based damage
-	int32_t attackSkill = 0;
-	int32_t attackValue = 0;
-	float attackFactor = 0.0;
-	[[maybe_unused]] int16_t elementAttack = 0;
-	[[maybe_unused]] CombatDamage combatDamage;
-	calculateSkillFormula(player, attackSkill, attackValue, attackFactor, elementAttack, combatDamage);
-
-	const auto magLevel = player->getMagicLevel();
-	const auto level = player->getLevel();
-
-	// Check if level is greater than zero before performing division
-	const auto levelDivision = level > 0 ? level / 5.0 : 0.0;
-
-	const auto totalAttackValue = magLevel + attackValue;
-
-	// Check if magLevel is greater than zero before performing division
-	const auto magicLevelDivision = totalAttackValue > 0 ? totalAttackValue / 3.0 : 0.0;
-
-	const double min = levelDivision + magicLevelDivision;
-	const double max = levelDivision + totalAttackValue;
-
-	// Returns the calculated maximum damage or a random value between the calculated minimum and maximum
-	return maxDamage ? -max : -normal_random(min, max);
+	return maxDamage ? -maxChange : -normal_random(minChange, maxChange);
 }
 
 int16_t WeaponWand::getElementDamageValue() const {

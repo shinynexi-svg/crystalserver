@@ -5,13 +5,13 @@ CREATE TABLE IF NOT EXISTS `server_config` (
     CONSTRAINT `server_config_pk` PRIMARY KEY (`config`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '59'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
+INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '63'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` varchar(32) NOT NULL,
-    `password` TEXT NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
     `email` varchar(255) NOT NULL DEFAULT '',
     `premdays` int(11) NOT NULL DEFAULT '0',
     `premdays_purchased` int(11) NOT NULL DEFAULT '0',
@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS `accounts` (
     `recruiter` INT(6) DEFAULT 0,
     `house_bid_id` int(11) NOT NULL DEFAULT '0',
     CONSTRAINT `accounts_pk` PRIMARY KEY (`id`),
-    CONSTRAINT `accounts_unique` UNIQUE (`name`)
+    CONSTRAINT `accounts_unique` UNIQUE (`name`),
+    INDEX `accounts_email` (`email`),
+    INDEX `accounts_password` (`password`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `coins_transactions`
@@ -135,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `players` (
     `bonus_rerolls` bigint(21) NOT NULL DEFAULT '0',
     `prey_wildcard` bigint(21) NOT NULL DEFAULT '0',
     `task_points` bigint(21) NOT NULL DEFAULT '0',
+    `soulseals_points` int unsigned NOT NULL DEFAULT '0',
     `quickloot_fallback` tinyint(1) DEFAULT '0',
     `lookmountbody` tinyint(3) unsigned NOT NULL DEFAULT '0',
     `lookmountfeet` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -226,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `account_vipgroups` (
     `account_id` int(11) UNSIGNED NOT NULL COMMENT 'id of account whose vip group entry it is',
     `name` varchar(128) NOT NULL,
     `customizable` BOOLEAN NOT NULL DEFAULT '1',
-    CONSTRAINT `account_vipgroups_pk` PRIMARY KEY (`id`, `account_id`),
+    CONSTRAINT `account_vipgroups_pk` PRIMARY KEY (`id`),
     CONSTRAINT `account_vipgroups_accounts_fk`
         FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
         ON DELETE CASCADE
@@ -582,7 +585,7 @@ CREATE TABLE IF NOT EXISTS `player_charms` (
     `UsedRunesBit` INT NOT NULL DEFAULT '0',
     `UnlockedRunesBit` INT NOT NULL DEFAULT '0',
     `charms` BLOB NULL,
-    `tracker list` BLOB NULL,
+    `tracker_list` BLOB NULL,
     CONSTRAINT `player_charms_players_fk`
         FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
@@ -759,6 +762,58 @@ CREATE TABLE IF NOT EXISTS `player_taskhunt` (
         FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- Table structure `player_bounty_tasks` (Winter Update 2025)
+CREATE TABLE IF NOT EXISTS `player_bounty_tasks` (
+    `player_id` int NOT NULL,
+    `state` tinyint NOT NULL DEFAULT 0,
+    `difficulty` tinyint NOT NULL DEFAULT 0,
+    `bounty_points` int NOT NULL DEFAULT 0,
+    `reroll_tokens` tinyint NOT NULL DEFAULT 0,
+    `free_reroll` bigint NOT NULL DEFAULT 0,
+    `active_raceid` int NOT NULL DEFAULT 0,
+    `active_kills` int NOT NULL DEFAULT 0,
+    `active_required_kills` int NOT NULL DEFAULT 0,
+    `active_reward_exp` int NOT NULL DEFAULT 0,
+    `active_reward_points` tinyint NOT NULL DEFAULT 0,
+    `active_task_grade` tinyint NOT NULL DEFAULT 0,
+    `active_task_difficulty` tinyint NOT NULL DEFAULT 0,
+    `talisman_damage_level` tinyint NOT NULL DEFAULT 0,
+    `talisman_lifeleech_level` tinyint NOT NULL DEFAULT 0,
+    `talisman_loot_level` tinyint NOT NULL DEFAULT 0,
+    `talisman_bestiary_level` tinyint NOT NULL DEFAULT 0,
+    `preferred_lists` BLOB NULL,
+    `current_creatures_list` BLOB NULL,
+    CONSTRAINT `player_bounty_tasks_pk` PRIMARY KEY (`player_id`),
+    CONSTRAINT `player_bounty_tasks_players_fk`
+        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table structure `player_weekly_tasks` (Winter Update 2025)
+CREATE TABLE IF NOT EXISTS `player_weekly_tasks` (
+    `player_id` int NOT NULL,
+    `has_expansion` BOOLEAN NOT NULL DEFAULT FALSE,
+    `difficulty` tinyint NOT NULL DEFAULT 0,
+    `any_creature_total_kills` int NOT NULL DEFAULT 0,
+    `any_creature_current_kills` int NOT NULL DEFAULT 0,
+    `completed_kill_tasks` tinyint NOT NULL DEFAULT 0,
+    `completed_delivery_tasks` tinyint NOT NULL DEFAULT 0,
+    `kill_task_reward_exp` int NOT NULL DEFAULT 0,
+    `delivery_task_reward_exp` int NOT NULL DEFAULT 0,
+    `reward_hunting_points` int NOT NULL DEFAULT 0,
+    `reward_soulseals` int NOT NULL DEFAULT 0,
+    `soulseals_points` int NOT NULL DEFAULT 0,
+    `needs_reward` tinyint NOT NULL DEFAULT 0,
+    `weekly_progress_finished` tinyint NOT NULL DEFAULT 0,
+    `kill_tasks` BLOB NULL,
+    `delivery_tasks` BLOB NULL,
+    CONSTRAINT `player_weekly_tasks_pk` PRIMARY KEY (`player_id`),
+    CONSTRAINT `player_weekly_tasks_players_fk`
+        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Table structure `player_bosstiary`
 CREATE TABLE IF NOT EXISTS `player_bosstiary` (

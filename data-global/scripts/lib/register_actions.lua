@@ -313,7 +313,6 @@ function onUseRope(player, item, fromPosition, target, toPosition, isHotkey)
 	if toPosition.x == CONTAINER_POSITION then
 		return false
 	end
-
 	local tile = Tile(toPosition)
 	if tile and tile:isRopeSpot() then
 		player:teleportTo(toPosition:moveUpstairs())
@@ -322,22 +321,31 @@ function onUseRope(player, item, fromPosition, target, toPosition, isHotkey)
 				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have successfully used your rope to climb out of the hole. Congratulations! Now continue to the east.")
 			end
 		end
-	elseif table.contains(holeId, target.itemid) then
-		toPosition.z = toPosition.z + 1
-		tile = Tile(toPosition)
-		if tile then
-			local thing = tile:getTopVisibleThing()
-			if thing:isItem() and thing:getType():isMovable() then
-				return thing:moveTo(toPosition:moveUpstairs())
-			elseif thing:isCreature() and thing:isPlayer() then
-				return thing:teleportTo(toPosition:moveUpstairs())
-			end
-		end
-
-		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
-	else
+		return true
+	end
+	if not table.contains(holeId, target.itemid) then
 		return false
 	end
+	toPosition.z = toPosition.z + 1
+	tile = Tile(toPosition)
+	if not tile then
+		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
+		return true
+	end
+	local thing = tile:getTopVisibleThing()
+	if not thing then
+		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
+		return true
+	end
+	local upPos = toPosition:moveUpstairs()
+	if thing:isItem() and thing:getType():isMovable() then
+		return thing:moveTo(upPos)
+	end
+	if thing:isCreature() and not thing:isNpc() then
+		thing:teleportTo(upPos)
+		return true
+	end
+	player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
 	return true
 end
 
@@ -582,10 +590,6 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 		target:transform(594)
 		target:decay()
 		toPosition:sendMagicEffect(CONST_ME_HITAREA)
-	elseif target.itemid == 6298 and target.actionid > 0 then
-		target:transform(615)
-		target:decay()
-		toPosition:sendMagicEffect(CONST_ME_HITAREA)
 	elseif target.itemid == 21341 then
 		target:transform(21342)
 		target:decay()
@@ -651,7 +655,7 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 		--The Ice Islands Quest, Nibelor 1: Breaking the Ice
 		local missionProgress = player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Mission02)
 		local pickAmount = player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.PickAmount)
-		if missionProgress < 1 or pickAmount >= 3 or player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Questline) ~= 3 then
+		if (missionProgress < 1 or missionProgress >= 3) and pickAmount >= 3 then
 			return false
 		end
 
@@ -892,15 +896,17 @@ function onUseCrowbar(player, item, fromPosition, target, toPosition, isHotkey)
 				player:setStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Mission02, 2)
 				toPosition:sendMagicEffect(CONST_ME_MAGIC_BLUE)
 			end
-		elseif target:getActionId() == 40041 and target.itemid == 4848 then
-			-- The ape city - mission 7
-			local apeCityStorage = player:getStorageValue(Storage.Quest.U7_6.TheApeCity.Casks)
-			if apeCityStorage < 3 then
-				player:setStorageValue(Storage.Quest.U7_6.TheApeCity.Casks, math.max(0, apeCityStorage) + 1)
-				target:transform(3134)
-				toPosition:sendMagicEffect(CONST_ME_EXPLOSIONAREA)
-				addEvent(revertCask, 3 * 60 * 1000, toPosition)
-			end
+		else
+			return false
+		end
+	elseif target:getActionId() == 40041 and target.itemid == 4848 then
+		-- The ape city - mission 7
+		local apeCityStorage = player:getStorageValue(Storage.Quest.U7_6.TheApeCity.Casks)
+		if apeCityStorage < 3 then
+			player:setStorageValue(Storage.Quest.U7_6.TheApeCity.Casks, math.max(0, apeCityStorage) + 1)
+			target:transform(3134)
+			toPosition:sendMagicEffect(CONST_ME_EXPLOSIONAREA)
+			addEvent(revertCask, 3 * 60 * 1000, toPosition)
 		end
 	elseif target.actionid == 12566 and player:getStorageValue(Storage.Quest.U8_1.SecretService.TBIMission06) == 1 then
 		-- Secret service quest
@@ -920,38 +926,47 @@ function onUseCrowbar(player, item, fromPosition, target, toPosition, isHotkey)
 end
 
 function onUseSpoon(player, item, fromPosition, target, toPosition, isHotkey)
-	local targetId = target:getId()
+	if not target or not target.getId then
+		return false
+	end
 
+	local targetId = target:getId()
 	if targetId == 3920 then
 		if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.SporesMushroom) < 1 then
 			player:addItem(7251, 1)
 			player:setStorageValue(Storage.Quest.U8_0.TheIceIslands.SporesMushroom, 1)
 			toPosition:sendMagicEffect(CONST_ME_MAGIC_RED)
 			player:say("You retrieve spores from a mushroom.", TALKTYPE_MONSTER_SAY)
-			return true
 		end
-	elseif targetId == 390 then
-		-- The Ice Islands Quest - Cure the Dogs
-		if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Questline) >= 21 then
-			if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava) < 1 then
-				player:addItem(7247, 1) -- fine sulphur
-				player:setStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava, 1)
-				toPosition:sendMagicEffect(CONST_ME_MAGIC_RED)
-				player:say("You retrieve a fine sulphur from a lava hole.", TALKTYPE_MONSTER_SAY)
-			end
-		-- What a Foolish Quest - Mission 8 (sulphur)
-		elseif player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Questline) == 21 then
-			if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur) < 1 then
-				player:addItem(124, 1) -- Easily inflammable sulphur
-				player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur, 1)
-				toPosition:sendMagicEffect(CONST_ME_YELLOW_RINGS)
-			end
-		else
-			return false
-		end
+		return true
 	end
 
-	return true
+	if targetId ~= 390 then
+		return false
+	end
+
+	-- The Ice Islands Quest - Cure the Dogs
+	if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Questline) >= 21 then
+		if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava) < 1 then
+			player:addItem(7247, 1) -- fine sulphur
+			player:setStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava, 1)
+			toPosition:sendMagicEffect(CONST_ME_MAGIC_RED)
+			player:say("You retrieve a fine sulphur from a lava hole.", TALKTYPE_MONSTER_SAY)
+		end
+		return true
+	end
+
+	-- What a Foolish Quest - Mission 8 (sulphur)
+	if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Questline) == 21 then
+		if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur) < 1 then
+			player:addItem(124, 1) -- Easily inflammable sulphur
+			player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur, 1)
+			toPosition:sendMagicEffect(CONST_ME_YELLOW_RINGS)
+		end
+		return true
+	end
+
+	return false
 end
 
 function onUseSpikedSquelcher(player, item, fromPosition, target, toPosition, isHotkey)
