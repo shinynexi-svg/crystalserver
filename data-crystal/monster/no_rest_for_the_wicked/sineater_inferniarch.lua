@@ -82,7 +82,7 @@ monster.voices = {
 monster.loot = {
 	{ name = "Platinum Coin", chance = 26500, maxCount = 40 },
 	{ id = 238, chance = 24500, maxCount = 5 }, -- great mana potion
-	{ id = 3030, chance = 24500, maxCount = 5 }, -- small ruby 
+	{ id = 3030, chance = 24500, maxCount = 5 }, -- small ruby
 	{ name = "Demonic Core Essence", chance = 1500, maxCount = 1 },
 	{ name = "Sineater Wing", chance = 5500, maxCount = 1 },
 	{ name = "Wand of Defiance", chance = 12000, maxCount = 1 },
