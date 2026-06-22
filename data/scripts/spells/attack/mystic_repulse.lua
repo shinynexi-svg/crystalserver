@@ -13,7 +13,7 @@ combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_ENERGYPULSE)
 
 function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 72
+	local basePower = 85 -- Vocation Adjustment: 72 -> 85
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 	local spellFactor = 0.7
 	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
@@ -66,7 +66,7 @@ spell:range(7)
 spell:needTarget(true)
 spell:blockWalls(true)
 spell:needWeapon(false)
-spell:cooldown(14 * 1000)
+spell:cooldown(12 * 1000) -- Vocation Adjustment: -> 12s
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("monk;true", "exalted monk;true")

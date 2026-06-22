@@ -24,6 +24,23 @@ end
 local combat = createCombat(AREA_BEAM5, AREADIAGONAL_BEAM5, "onGetFormulaValues")
 local combatWOD = createCombat(AREA_BEAM7, AREADIAGONAL_BEAM7, "onGetFormulaValuesWOD")
 
+-- Vocation Adjustment: Beam Mastery fires two identical beams parallel to the main one (left + right),
+-- each dealing 40/60/80% of the beam damage at Beam Mastery stage 1/2/3. Flank length matches the
+-- Beam-Mastery (combatWOD) beam length; orthogonal flank, diagonal casts approximate.
+function onGetFormulaValuesBeamFlank(player, level, maglevel)
+	local stage = player:revelationStageWOD("Beam Mastery")
+	local factor = (stage >= 3 and 0.80) or (stage >= 2 and 0.60) or (stage >= 1 and 0.40) or 0
+	local min = ((level / 5) + (maglevel * 1.8) + 11) * factor
+	local max = ((level / 5) + (maglevel * 3) + 19) * factor
+	return -min, -max
+end
+
+local flankCombat = Combat()
+flankCombat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValuesBeamFlank")
+flankCombat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
+flankCombat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ENERGYHIT)
+flankCombat:setArea(createCombatArea({ { 1, 0, 1 }, { 1, 0, 1 }, { 1, 0, 1 }, { 1, 0, 1 }, { 1, 0, 1 }, { 1, 0, 1 }, { 0, 3, 0 } }))
+
 local spell = Spell("instant")
 
 function spell.onCastSpell(creature, var)
@@ -31,7 +48,13 @@ function spell.onCastSpell(creature, var)
 	if not creature or not player then
 		return false
 	end
-	return player:instantSkillWOD("Beam Mastery") and combatWOD:execute(creature, var) or combat:execute(creature, var)
+	local hasBeamMastery = player:instantSkillWOD("Beam Mastery")
+	local result = hasBeamMastery and combatWOD:execute(creature, var) or combat:execute(creature, var)
+	-- Beam Mastery: fire the parallel left + right beams (scaled inside onGetFormulaValuesBeamFlank).
+	if hasBeamMastery then
+		flankCombat:execute(creature, var)
+	end
+	return result
 end
 
 spell:group("attack")

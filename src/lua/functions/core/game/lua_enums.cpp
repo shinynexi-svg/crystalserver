@@ -124,6 +124,7 @@ void LuaEnums::init(lua_State* L) {
 	initGuildsEnum(L);
 	initWorldTypeEnums(L);
 	initVirtueEnums(L);
+	initStanceEnums(L);
 }
 
 void LuaEnums::initOthersEnums(lua_State* L) {
@@ -762,6 +763,11 @@ void LuaEnums::initConstAniEnums(lua_State* L) {
 	registerEnum(L, CONST_ANI_ROYALSTAR);
 	registerEnum(L, CONST_ANI_CANDYCANE);
 	registerEnum(L, CONST_ANI_CHERRYBOMB);
+	registerEnum(L, CONST_ANI_SHATTERSTORMARROW);
+	registerEnum(L, CONST_ANI_FIRESTORMARROW);
+	registerEnum(L, CONST_ANI_TERRASTORMARROW);
+	registerEnum(L, CONST_ANI_FROSTSTORMARROW);
+	registerEnum(L, CONST_ANI_THUNDERSTORMARROW);
 	registerEnum(L, CONST_ANI_WEAPONTYPE);
 }
 
@@ -1913,4 +1919,19 @@ void LuaEnums::initVirtueEnums(lua_State* L) {
 	registerEnum(L, VIRTUE_HARMONY);
 	registerEnum(L, VIRTUE_JUSTICE);
 	registerEnum(L, VIRTUE_SUSTAIN);
+}
+
+void LuaEnums::initStanceEnums(lua_State* L) {
+	registerEnum(L, STANCE_NONE);
+	registerEnum(L, STANCE_PROTECTOR);
+	registerEnum(L, STANCE_BLOOD_RAGE);
+	registerEnum(L, STANCE_DIVINE_DEFIANCE);
+	registerEnum(L, STANCE_SHARPSHOOTER);
+	registerEnum(L, STANCE_EXPOSE_WEAKNESS);
+	registerEnum(L, STANCE_SAP_STRENGTH);
+	registerEnum(L, STANCE_MASTER_OF_FLAMES);
+	registerEnum(L, STANCE_MASTER_OF_THUNDER);
+	registerEnum(L, STANCE_MASTER_OF_DECAY);
+	registerEnum(L, STANCE_SHARED_CONSERVATION);
+	registerEnum(L, STANCE_ELEMENTAL_SYNTHESIS);
 }

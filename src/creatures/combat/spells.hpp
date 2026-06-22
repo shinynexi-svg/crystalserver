@@ -296,7 +296,7 @@ private:
 class InstantSpell final : public Spell {
 public:
 	InstantSpell();
-	bool playerCastInstant(const std::shared_ptr<Player> &player, std::string &param) const;
+	bool playerCastInstant(const std::shared_ptr<Player> &player, std::string &param, const Position &to = {}) const;
 
 	bool castSpell(const std::shared_ptr<Creature> &creature) override;
 	bool castSpell(const std::shared_ptr<Creature> &creature, const std::shared_ptr<Creature> &target) override;
@@ -311,6 +311,8 @@ public:
 	void setHasPlayerNameParam(bool p);
 	[[nodiscard]] bool getNeedDirection() const;
 	void setNeedDirection(bool n);
+	[[nodiscard]] bool getNeedPosition() const;
+	void setNeedPosition(bool n);
 	[[nodiscard]] bool getNeedCasterTargetOrDirection() const;
 	void setNeedCasterTargetOrDirection(bool d);
 	[[nodiscard]] bool getBlockWalls() const;
@@ -320,6 +322,7 @@ public:
 
 private:
 	bool needDirection = false;
+	bool needPosition = false;
 	bool hasParam = false;
 	bool hasPlayerNameParam = false;
 	bool checkLineOfSight = true;

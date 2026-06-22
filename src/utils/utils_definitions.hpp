@@ -340,7 +340,14 @@ enum ShootType_t : uint8_t {
 	CONST_ANI_CANDYCANE = 61,
 	CONST_ANI_CHERRYBOMB = 62,
 
-	CONST_ANI_LAST = CONST_ANI_CHERRYBOMB,
+	// 15.25 Vocation Adjustment - storm arrows (client appearances missile ids 64-68)
+	CONST_ANI_SHATTERSTORMARROW = 64,
+	CONST_ANI_FIRESTORMARROW = 65,
+	CONST_ANI_TERRASTORMARROW = 66,
+	CONST_ANI_FROSTSTORMARROW = 67,
+	CONST_ANI_THUNDERSTORMARROW = 68,
+
+	CONST_ANI_LAST = CONST_ANI_THUNDERSTORMARROW,
 
 	// for internal use, don't send to client
 	CONST_ANI_WEAPONTYPE = 0xFE, // 254
@@ -794,6 +801,15 @@ enum class AttrSubId_t {
 	JeanPierreFishing,
 	BloodRageProtector,
 	Sharpshooter,
+	SwiftFoot,
+	DivineDefiance,
+	SorcererMasterOfFlames,
+	SorcererMasterOfThunder,
+	SorcererMasterOfDecay,
+	DruidSharedConservation,
+	DruidElementalSynthesis,
+	SorcererSapStrengthAura,
+	SorcererExposeWeaknessAura,
 };
 
 enum Concoction_t : uint16_t {

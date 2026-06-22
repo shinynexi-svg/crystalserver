@@ -195,6 +195,18 @@ function playerLoginGlobal.onLogin(player)
 	player:registerEvent("DropLoot")
 	player:registerEvent("BossParticipation")
 	player:registerEvent("UpdatePlayerOnAdvancedLevel")
+
+	-- Vocation Adjustment: restore active stances from the previous session.
+	local stanceKv = player:kv():scoped("stance")
+	local primary = stanceKv:get("primary")
+	if primary and primary > 0 then
+		player:setStance(primary)
+	end
+	local elemental = stanceKv:get("elemental")
+	if elemental and elemental > 0 then
+		player:setElementalStance(elemental)
+	end
+
 	return true
 end
 

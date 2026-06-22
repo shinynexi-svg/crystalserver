@@ -2164,25 +2164,35 @@ void ProtocolGame::parseSay(NetworkMessage &msg) {
 		return;
 	}
 
+	// 15.25 crossHairTarget spells append the aim tile to the say packet:
+	//   [aimMode:u8] (0 = none, 1 = cursor position, 2 = crosshair) and, when aimMode != 0,
+	//   [x:u16 LE][y:u16 LE][z:u8][seq:u8]. parseSay historically ignored this tail.
+	// Stash the aimed tile so the cast (crossHairTarget spell) can land there.
+	const int32_t sayRemaining = static_cast<int32_t>(msg.getLength()) - (static_cast<int32_t>(msg.getBufferPosition()) - 7);
+	if (sayRemaining > 0) {
+		const uint8_t aimMode = msg.getByte();
+		if (aimMode != 0 && sayRemaining >= 6) {
+			Position aimPos;
+			aimPos.x = msg.get<uint16_t>();
+			aimPos.y = msg.get<uint16_t>();
+			aimPos.z = msg.getByte();
+			player->setSpellAimPosition(aimPos);
+		} else {
+			player->clearSpellAimPosition();
+		}
+	} else {
+		player->clearSpellAimPosition();
+	}
+
 	g_game().playerSay(player->getID(), channelId, type, receiver, text);
 }
 
 void ProtocolGame::parseFightModes(NetworkMessage &msg) {
-	uint8_t rawFightMode = msg.getByte(); // 1 - offensive, 2 - balanced, 3 - defensive
+	// uint8_t rawFightMode = msg.getByte(); // 1 - offensive, 2 - balanced, 3 - defensive -- FIGHT MODE DEPRECATED FROM 15.25
 	uint8_t rawChaseMode = msg.getByte(); // 0 - stand while fightning, 1 - chase opponent
 	uint8_t rawSecureMode = msg.getByte(); // 0 - can't attack unmarked, 1 - can attack unmarked
-	// uint8_t rawPvpMode = msg.getByte(); // pvp mode introduced in 10.0
 
-	FightMode_t fightMode;
-	if (rawFightMode == 1) {
-		fightMode = FIGHTMODE_ATTACK;
-	} else if (rawFightMode == 2) {
-		fightMode = FIGHTMODE_BALANCED;
-	} else {
-		fightMode = FIGHTMODE_DEFENSE;
-	}
-
-	g_game().playerSetFightModes(player->getID(), fightMode, rawChaseMode != 0, rawSecureMode != 0);
+	g_game().playerSetFightModes(player->getID(), FIGHTMODE_ATTACK, rawChaseMode != 0, rawSecureMode != 0);
 }
 
 void ProtocolGame::parseAttack(NetworkMessage &msg) {
@@ -4881,20 +4891,22 @@ void ProtocolGame::sendCyclopediaCharacterDefenceStats() {
 
 	const auto shieldingSkill = player->getSkillLevel(SKILL_SHIELD);
 	const uint16_t defenseWheel = player->wheel()->getMajorStatConditional("Combat Mastery", WheelMajor_t::DEFENSE);
+	// DefenceValueStats: client (15.25) reads exactly 5 fields here (u16,u16,u8,i16,u16).
+	// shieldingSkill is read SIGNED but is always >= 0 so the wire bytes are identical to u16.
 	msg.add<uint16_t>(player->getDefense(true));
 	msg.add<uint16_t>(player->getDefenseEquipment());
 	msg.addByte(0x06);
 	msg.add<uint16_t>(shieldingSkill);
 	msg.add<uint16_t>(defenseWheel);
-	msg.add<uint16_t>(0);
 
+	// MitigationStats: client reads exactly 5 doubles (NOT 6 — the type-14 parser is shorter
+	// than type-13 OffenceStats; sending a 6th double desyncs the absorb-count byte -> crash).
 	const auto wheelMultiplier = player->wheel()->getMitigationMultiplier();
 	msg.addDouble(player->getMitigation() / 100.);
 	msg.addDouble(0.0);
 	msg.addDouble(player->getDefenseEquipment() / 10000.);
 	msg.addDouble(player->getSkillLevel(SKILL_SHIELD) * player->getVocation()->mitigationFactor / 10000.);
 	msg.addDouble(wheelMultiplier / 100.);
-	msg.addDouble(player->getCombatTacticsMitigation());
 
 	// Store the "combats" to increase in absorb values function and send to client later
 	uint8_t combats = 0;
@@ -4909,6 +4921,10 @@ void ProtocolGame::sendCyclopediaCharacterDefenceStats() {
 	msg.setBufferPosition(startCombats);
 	msg.addByte(combats);
 	msg.setBufferPosition(endCombats);
+
+	// NOTE: DefenceStats (type 14) ends right after the absorb list. The 15.25 client's
+	// type-14 parser has NO reads past this point — unlike OffenceStats (type 13), it does
+	// NOT consume a trailing "Winter Update" block, so appending one here desyncs/crashes.
 
 	writeToOutputBuffer(msg);
 }
@@ -11162,6 +11178,25 @@ void ProtocolGame::sendVirtueProtocol(const uint8_t virtueValue) {
 			break;
 	}
 	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendStanceProtocol(const std::vector<uint16_t> &spellIds) {
+#ifndef PROTOCOL_DISABLE_MONK_STATES
+	// 0xC1 sub-channel 0x02 = active-stance highlight list. The 15.25 client reads a u8 count
+	// then that many little-endian u16 spell ids and WHOLE-REPLACES its active-spell set, framing
+	// every action-bar slot whose spell id is in the set. So we must send the COMPLETE set of
+	// currently-active stances every time — e.g. a sorcerer with an elemental stance AND a
+	// crippling stance sends both ids (count 2) so BOTH slots get framed. An empty list (count 0)
+	// clears all frames; never send id 0 (id 0 matches every empty slot -> frames them all).
+	NetworkMessage msg;
+	msg.addByte(0xC1);
+	msg.addByte(0x02);
+	msg.addByte(static_cast<uint8_t>(spellIds.size()));
+	for (const uint16_t spellId : spellIds) {
+		msg.add<uint16_t>(spellId);
+	}
+	writeToOutputBuffer(msg);
+#endif
 }
 
 void ProtocolGame::parseSelectSpellAimProtocol(NetworkMessage &msg) {
