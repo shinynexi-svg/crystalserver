@@ -163,8 +163,8 @@ static void applyElementalStance(const std::shared_ptr<Player> &player, CombatDa
 	// element (never off a freshly converted spell, otherwise every cast would chain-convert).
 	if (!converted) {
 		if ((flames && damage.primary.type == COMBAT_FIREDAMAGE)
-			|| (thunder && damage.primary.type == COMBAT_ENERGYDAMAGE)
-			|| (decay && damage.primary.type == COMBAT_DEATHDAMAGE)) {
+		    || (thunder && damage.primary.type == COMBAT_ENERGYDAMAGE)
+		    || (decay && damage.primary.type == COMBAT_DEATHDAMAGE)) {
 			player->setPendingElementConversion(damage.primary.type);
 		}
 	}
