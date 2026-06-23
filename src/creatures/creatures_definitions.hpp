@@ -1525,18 +1525,18 @@ enum VirtueMonk_t : uint8_t {
 enum Stance_t : uint8_t {
 	STANCE_NONE = 0,
 	// Knight (single slot)
-	STANCE_PROTECTOR = 1,       // utamo tempo / client id 132
-	STANCE_BLOOD_RAGE = 2,      // utito tempo / client id 133
+	STANCE_PROTECTOR = 1, // utamo tempo / client id 132
+	STANCE_BLOOD_RAGE = 2, // utito tempo / client id 133
 	// Paladin (single slot)
 	STANCE_DIVINE_DEFIANCE = 3, // utori hur / client id 314
-	STANCE_SHARPSHOOTER = 4,    // utito tempo san / client id 135
+	STANCE_SHARPSHOOTER = 4, // utito tempo san / client id 135
 	// Sorcerer CRIPPLING slot (highlightable)
 	STANCE_EXPOSE_WEAKNESS = 5, // exori moe / client id 243
-	STANCE_SAP_STRENGTH = 6,    // exori kor / client id 244
+	STANCE_SAP_STRENGTH = 6, // exori kor / client id 244
 	// Sorcerer ELEMENTAL slot (NO client highlight id)
-	STANCE_MASTER_OF_FLAMES = 7,    // client id 304
-	STANCE_MASTER_OF_THUNDER = 8,   // client id 305
-	STANCE_MASTER_OF_DECAY = 9,     // client id 306
+	STANCE_MASTER_OF_FLAMES = 7, // client id 304
+	STANCE_MASTER_OF_THUNDER = 8, // client id 305
+	STANCE_MASTER_OF_DECAY = 9, // client id 306
 	// Druid (single slot — NO client highlight id)
 	STANCE_SHARED_CONSERVATION = 10, // client id 309
 	STANCE_ELEMENTAL_SYNTHESIS = 11, // client id 319

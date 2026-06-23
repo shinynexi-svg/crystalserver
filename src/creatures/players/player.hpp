@@ -2032,11 +2032,11 @@ private:
 	uint64_t m_serene_cooldown = 0;
 	VirtueMonk_t m_virtue = VIRTUE_NONE;
 
-	Stance_t m_stancePrimary = STANCE_NONE;   // single stance for non-sorc; crippling stance for sorc
+	Stance_t m_stancePrimary = STANCE_NONE; // single stance for non-sorc; crippling stance for sorc
 	Stance_t m_stanceElemental = STANCE_NONE; // sorcerer-only (Master of Flames/Thunder/Decay)
 	CombatType_t m_pendingElementConversion = COMBAT_NONE; // Master-of-*: convert the NEXT off-element spell
 	uint8_t m_monkAuraVocMask = 0; // monk virtue aura: bitmask (1<<baseId) of vocation bonuses active here
-	int64_t m_monkAuraExpiry = 0;  // OTSYS_TIME() until which m_monkAuraVocMask is valid
+	int64_t m_monkAuraExpiry = 0; // OTSYS_TIME() until which m_monkAuraVocMask is valid
 
 	friend class Game;
 	friend class SaveManager;
