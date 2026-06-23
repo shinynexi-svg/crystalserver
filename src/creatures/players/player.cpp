@@ -12436,12 +12436,6 @@ void Player::resyncSpellCooldowns() const {
 	}
 }
 
-void Player::sendVirtueProtocol() const {
-	if (client && m_virtue != VIRTUE_NONE) {
-		client->sendVirtueProtocol(static_cast<uint8_t>(m_virtue));
-	}
-}
-
 VirtueMonk_t Player::getVirtue() const {
 	return m_virtue;
 }
@@ -12458,7 +12452,7 @@ void Player::setVirtue(const VirtueMonk_t virtueEnum) {
 			break;
 	}
 
-	sendVirtueProtocol();
+	sendStanceProtocol();
 
 	if (m_virtue != VIRTUE_NONE) {
 		sendSkills();
@@ -12539,6 +12533,23 @@ std::vector<uint16_t> Player::buildActiveStanceSpellIds() const {
 			ids.push_back(id);
 		}
 	}
+
+	// Monk virtue (Harmony 274 / Justice 275 / Sustain 276) is a stance too: frame its action-bar
+	// slot through the same active-stance highlight. The dedicated 0xC1 virtue packet is disabled
+	// (it crashes the 15.25 client), so this frame is the virtue indicator.
+	switch (m_virtue) {
+		case VIRTUE_HARMONY:
+			ids.push_back(274);
+			break;
+		case VIRTUE_JUSTICE:
+			ids.push_back(275);
+			break;
+		case VIRTUE_SUSTAIN:
+			ids.push_back(276);
+			break;
+		default:
+			break;
+	}
 	return ids;
 }
 
@@ -12546,6 +12557,7 @@ void Player::sendStanceProtocol() const {
 	if (!client) {
 		return;
 	}
+
 	// Always resend the COMPLETE active-stance set. The client whole-replaces its highlight
 	// set, so this frames every currently-active stance (1 or 2 for a sorcerer) and, when the
 	// set is empty, sends count 0 to clear all frames WITHOUT ever putting id 0 on the wire

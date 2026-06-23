@@ -825,6 +825,7 @@ void ProtocolGame::connect(const std::string &playerName, OperatingSystem_t oper
 
 	player->sendHarmonyProtocol();
 	player->sendSereneProtocol();
+	player->sendStanceProtocol();
 	player->resyncSpellCooldowns();
 
 	sendAddCreature(player, player->getPosition(), 0, true);
@@ -11162,26 +11163,7 @@ void ProtocolGame::sendSereneProtocol(const bool isSerene) {
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::sendVirtueProtocol(const uint8_t virtueValue) {
-	NetworkMessage msg;
-	msg.addByte(0xC1);
-	msg.addByte(0x02);
-	switch (virtueValue) {
-		case 1:
-			msg.addByte(0x01); // Virtue of Harmony
-			break;
-		case 2:
-			msg.addByte(0x02); // Virtue of Justice
-			break;
-		case 3:
-			msg.addByte(0x03); // Virtue of Sustain
-			break;
-	}
-	writeToOutputBuffer(msg);
-}
-
 void ProtocolGame::sendStanceProtocol(const std::vector<uint16_t> &spellIds) {
-#ifndef PROTOCOL_DISABLE_MONK_STATES
 	// 0xC1 sub-channel 0x02 = active-stance highlight list. The 15.25 client reads a u8 count
 	// then that many little-endian u16 spell ids and WHOLE-REPLACES its active-spell set, framing
 	// every action-bar slot whose spell id is in the set. So we must send the COMPLETE set of
@@ -11196,7 +11178,6 @@ void ProtocolGame::sendStanceProtocol(const std::vector<uint16_t> &spellIds) {
 		msg.add<uint16_t>(spellId);
 	}
 	writeToOutputBuffer(msg);
-#endif
 }
 
 void ProtocolGame::parseSelectSpellAimProtocol(NetworkMessage &msg) {
