@@ -632,3 +632,20 @@ function calculateLevelMagicDamage(level, magicLevel, minMlCoeff, maxMlCoeff, mi
 	local max = levelBonus + magicLevel * maxMlCoeff + maxOffset
 	return min, max
 end
+
+function calculateMagicSpellDamage(level, magicLevel, basePower)
+	local levelBonus = calculateBaseDamageHealing(level)
+	local mlvlMultiplier = math.sqrt(basePower * 0.4)
+	local flatTerm = basePower / 6
+	local avg = levelBonus + magicLevel * mlvlMultiplier + flatTerm
+	local min = math.floor(avg * 0.88)
+	local max = math.floor(avg * 1.12)
+	return min, max
+end
+
+function calculateHealingSpellDamage(level, magicLevel, basePower)
+	local levelBonus = calculateBaseDamageHealing(level)
+	local min = levelBonus + magicLevel * (basePower * 7.3 / 250) + 42
+	local max = levelBonus + magicLevel * (basePower * 12.4 / 250) + 90
+	return math.floor(min), math.ceil(max)
+end
