@@ -12748,7 +12748,6 @@ EquippedWeaponProficiencyBonuses &Player::getEquippedWeaponProficiency() {
 	return equippedWeaponProficiency;
 }
 
-
 void Player::tryProcWeaponProficiencyHomingMissile(const std::shared_ptr<Creature> &target) {
 	if (!target || target->isRemoved() || target->getHealth() <= 0) {
 		return;
@@ -12806,14 +12805,36 @@ void Player::tryProcWeaponProficiencyHomingMissile(const std::shared_ptr<Creatur
 			CombatType_t combatType = COMBAT_NONE;
 			uint16_t targetEffect = CONST_ME_NONE;
 			switch (perk.damageType) {
-				case PROFICIENCY_DAMAGETYPE_PHYSICAL: combatType = COMBAT_PHYSICALDAMAGE; targetEffect = CONST_ME_DRAWBLOOD; break;
-				case PROFICIENCY_DAMAGETYPE_FIRE:     combatType = COMBAT_FIREDAMAGE;     targetEffect = 177; break;
-				case PROFICIENCY_DAMAGETYPE_EARTH:    combatType = COMBAT_EARTHDAMAGE;    targetEffect = 178; break;
-				case PROFICIENCY_DAMAGETYPE_ENERGY:   combatType = COMBAT_ENERGYDAMAGE;   targetEffect = 179; break;
-				case PROFICIENCY_DAMAGETYPE_ICE:      combatType = COMBAT_ICEDAMAGE;      targetEffect = 176; break;
-				case PROFICIENCY_DAMAGETYPE_HOLY:     combatType = COMBAT_HOLYDAMAGE;     targetEffect = 181; break;
-				case PROFICIENCY_DAMAGETYPE_DEATH:    combatType = COMBAT_DEATHDAMAGE;    targetEffect = 180; break;
-				default: continue; // healing / unsupported element -> skip
+				case PROFICIENCY_DAMAGETYPE_PHYSICAL:
+					combatType = COMBAT_PHYSICALDAMAGE;
+					targetEffect = CONST_ME_DRAWBLOOD;
+					break;
+				case PROFICIENCY_DAMAGETYPE_FIRE:
+					combatType = COMBAT_FIREDAMAGE;
+					targetEffect = 177;
+					break;
+				case PROFICIENCY_DAMAGETYPE_EARTH:
+					combatType = COMBAT_EARTHDAMAGE;
+					targetEffect = 178;
+					break;
+				case PROFICIENCY_DAMAGETYPE_ENERGY:
+					combatType = COMBAT_ENERGYDAMAGE;
+					targetEffect = 179;
+					break;
+				case PROFICIENCY_DAMAGETYPE_ICE:
+					combatType = COMBAT_ICEDAMAGE;
+					targetEffect = 176;
+					break;
+				case PROFICIENCY_DAMAGETYPE_HOLY:
+					combatType = COMBAT_HOLYDAMAGE;
+					targetEffect = 181;
+					break;
+				case PROFICIENCY_DAMAGETYPE_DEATH:
+					combatType = COMBAT_DEATHDAMAGE;
+					targetEffect = 180;
+					break;
+				default:
+					continue; // healing / unsupported element -> skip
 			}
 
 			// Damage = Multiplier * level (data-driven; Multiplier lives in proficiencies.json).

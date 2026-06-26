@@ -2667,73 +2667,73 @@ void ProtocolGame::parseBestiarysendMonsterData(NetworkMessage &msg) {
 	// 15.25 (sommerrelease26): in the e2a4a1 client everything past the stars byte is gated on
 	// currentLevel != 0, and the occurrence byte is now followed by an extra (unconfirmed) byte.
 	if (currentLevel != 0) {
-	newmsg.addByte(mtype->info.bestiaryOccurrence);
-	newmsg.addByte(0);
+		newmsg.addByte(mtype->info.bestiaryOccurrence);
+		newmsg.addByte(0);
 
-	std::vector<LootBlock> lootList = mtype->info.lootItems;
-	newmsg.addByte(lootList.size());
-	for (const LootBlock &loot : lootList) {
-		int8_t difficult = g_iobestiary().calculateDifficult(loot.chance);
-		bool shouldAddItem = false;
+		std::vector<LootBlock> lootList = mtype->info.lootItems;
+		newmsg.addByte(lootList.size());
+		for (const LootBlock &loot : lootList) {
+			int8_t difficult = g_iobestiary().calculateDifficult(loot.chance);
+			bool shouldAddItem = false;
 
-		switch (currentLevel) {
-			case 1:
-				shouldAddItem = false;
-				break;
-			case 2:
-				if (difficult < 2) {
+			switch (currentLevel) {
+				case 1:
+					shouldAddItem = false;
+					break;
+				case 2:
+					if (difficult < 2) {
+						shouldAddItem = true;
+					}
+					break;
+				case 3:
+					if (difficult < 3) {
+						shouldAddItem = true;
+					}
+					break;
+				case 4:
 					shouldAddItem = true;
-				}
-				break;
-			case 3:
-				if (difficult < 3) {
-					shouldAddItem = true;
-				}
-				break;
-			case 4:
-				shouldAddItem = true;
-				break;
+					break;
+			}
+
+			newmsg.add<uint16_t>(g_configManager().getBoolean(SHOW_LOOTS_IN_BESTIARY) || shouldAddItem == true ? loot.id : 0);
+			newmsg.addByte(difficult);
+			newmsg.addByte(0); // 1 if special event - 0 if regular loot (?)
+			if (g_configManager().getBoolean(SHOW_LOOTS_IN_BESTIARY) || shouldAddItem == true) {
+				newmsg.addString(loot.name);
+				newmsg.addByte(loot.countmax > 0 ? 0x1 : 0x0);
+			}
 		}
 
-		newmsg.add<uint16_t>(g_configManager().getBoolean(SHOW_LOOTS_IN_BESTIARY) || shouldAddItem == true ? loot.id : 0);
-		newmsg.addByte(difficult);
-		newmsg.addByte(0); // 1 if special event - 0 if regular loot (?)
-		if (g_configManager().getBoolean(SHOW_LOOTS_IN_BESTIARY) || shouldAddItem == true) {
-			newmsg.addString(loot.name);
-			newmsg.addByte(loot.countmax > 0 ? 0x1 : 0x0);
-		}
-	}
+		if (currentLevel > 1) {
+			newmsg.add<uint16_t>(mtype->info.bestiaryCharmsPoints);
+			int8_t attackmode = 0;
+			if (!mtype->info.isHostile) {
+				attackmode = 2;
+			} else if (mtype->info.targetDistance) {
+				attackmode = 1;
+			}
 
-	if (currentLevel > 1) {
-		newmsg.add<uint16_t>(mtype->info.bestiaryCharmsPoints);
-		int8_t attackmode = 0;
-		if (!mtype->info.isHostile) {
-			attackmode = 2;
-		} else if (mtype->info.targetDistance) {
-			attackmode = 1;
-		}
-
-		newmsg.addByte(attackmode);
-		newmsg.addByte(0x02);
-		newmsg.add<uint32_t>(mtype->info.healthMax);
-		newmsg.add<uint32_t>(mtype->info.experience);
-		newmsg.add<uint16_t>(mtype->getBaseSpeed());
-		newmsg.add<uint16_t>(mtype->info.armor);
-		newmsg.addDouble(mtype->info.mitigation);
-	}
-
-	if (currentLevel > 2) {
-		std::map<uint8_t, int16_t> elements = g_iobestiary().getMonsterElements(mtype);
-
-		newmsg.addByte(elements.size());
-		for (auto &element : elements) {
-			newmsg.addByte(element.first);
-			newmsg.add<uint16_t>(element.second);
+			newmsg.addByte(attackmode);
+			newmsg.addByte(0x02);
+			newmsg.add<uint32_t>(mtype->info.healthMax);
+			newmsg.add<uint32_t>(mtype->info.experience);
+			newmsg.add<uint16_t>(mtype->getBaseSpeed());
+			newmsg.add<uint16_t>(mtype->info.armor);
+			newmsg.addDouble(mtype->info.mitigation);
 		}
 
-		newmsg.add<uint16_t>(1);
-		newmsg.addString(mtype->info.bestiaryLocations);
-	}
+		if (currentLevel > 2) {
+			std::map<uint8_t, int16_t> elements = g_iobestiary().getMonsterElements(mtype);
+
+			newmsg.addByte(elements.size());
+			for (auto &element : elements) {
+				newmsg.addByte(element.first);
+				newmsg.add<uint16_t>(element.second);
+			}
+
+			newmsg.add<uint16_t>(1);
+			newmsg.addString(mtype->info.bestiaryLocations);
+		}
 	} // end 15.25 (sommerrelease26) currentLevel != 0 gate
 
 	writeToOutputBuffer(newmsg);
