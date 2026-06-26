@@ -484,6 +484,9 @@ checkExpiredMarketOffersEachMinutes = 60
 maxMarketOffersAtATimePerPlayer = 100
 
 -- MySQL
+-- NOTE: mysqlPoolSize 4 (default) — small to medium servers
+-- 8–16 — high-traffic servers with heavy market usage
+-- 1 — equivalent to the old single-connection behavior
 mysqlHost = "127.0.0.1"
 mysqlUser = "root"
 mysqlPass = "root"
