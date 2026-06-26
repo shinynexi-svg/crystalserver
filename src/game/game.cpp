@@ -7666,18 +7666,19 @@ int32_t Game::applyHealthChange(const CombatDamage &damage, const std::shared_pt
 			const int32_t overkill = (damage.primary.value + damage.secondary.value) - targetHealth + 1;
 			const bool taxReady = targetPlayer->getManaBufferTaxTime() <= OTSYS_TIME();
 			const int32_t manaCost = overkill * 8 + (taxReady ? static_cast<int32_t>(targetPlayer->getMaxMana() * 0.25) : 0);
-			if (manaCost > 0 && targetPlayer->getMana() >= manaCost) {
+			if (manaCost > 0 && targetPlayer->getMana() >= static_cast<uint32_t>(manaCost)) {
 				CombatDamage manaDrain;
-				manaDrain.primary.value = manaCost;
+				manaDrain.origin = ORIGIN_NONE;
+				manaDrain.primary.value = -manaCost;
 				manaDrain.primary.type = COMBAT_MANADRAIN;
-				g_game().combatChangeMana(targetPlayer, targetPlayer, manaDrain);
-
-				if (taxReady) {
-					targetPlayer->setManaBufferTaxTime(OTSYS_TIME() + 2000);
+				if (g_game().combatChangeMana(targetPlayer, targetPlayer, manaDrain)) {
+					if (taxReady) {
+						targetPlayer->setManaBufferTaxTime(OTSYS_TIME() + 2000);
+					}
+					// Flag the survive; combatChangeHealth then clamps the drained damage to leave exactly 1 HP.
+					// (A survive-heal of `overkill` overshot to ~overkill HP and broke at the max-health cap.)
+					targetPlayer->setManaBufferSurvived(true);
 				}
-				// Flag the survive; combatChangeHealth then clamps the drained damage to leave exactly 1 HP.
-				// (A survive-heal of `overkill` overshot to ~overkill HP and broke at the max-health cap.)
-				targetPlayer->setManaBufferSurvived(true);
 			}
 		}
 	}

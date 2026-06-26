@@ -1188,6 +1188,8 @@ public:
 	void sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) const;
 
 	void checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, uint32_t oldMagLevel, uint32_t newMagLevel) const;
+	void sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId) const;
+	void sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId) const;
 
 	void onThink(uint32_t interval) override;
 
