@@ -38,7 +38,7 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 		return false;
 	}
 
-	const Database &db = Database::getInstance();
+	Database &db = Database::getInstance();
 	std::ostringstream ss;
 
 	// Initialize variables
