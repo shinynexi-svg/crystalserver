@@ -105,7 +105,7 @@ private:
 	void putConnection(DBConnection* conn);
 
 	std::vector<std::unique_ptr<DBConnection>> connections;
-	std::atomic<size_t> nextIndex{0};
+	std::atomic<size_t> nextIndex { 0 };
 	uint64_t maxPacketSize = 1048576;
 
 	static thread_local DBConnection* tls_pinnedConnection;
