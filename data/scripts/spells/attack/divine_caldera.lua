@@ -3,10 +3,13 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYAREA)
 combat:setArea(createCombatArea(AREA_CIRCLE3X3))
 
+-- LIVE rebalance: base 140 -> 160.
+local DAMAGE_SCALE = 160 / 140
+
 function onGetFormulaValues(player, level, maglevel)
 	local min = (level / 5) + (maglevel * 4)
 	local max = (level / 5) + (maglevel * 6)
-	return -min, -max
+	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
 end
 
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

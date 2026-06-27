@@ -52,12 +52,12 @@ function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
 	return -total * 0.9, -total * 1.1
 end
 
-onGetFormulaValuesPhysical1 = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesEnergy1 = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesEarth1 = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesPhysical2 = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesEnergy2 = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesEarth2 = loadstring(string.dump(onGetFormulaValues))
+onGetFormulaValuesPhysical1 = onGetFormulaValues
+onGetFormulaValuesEnergy1 = onGetFormulaValues
+onGetFormulaValuesEarth1 = onGetFormulaValues
+onGetFormulaValuesPhysical2 = onGetFormulaValues
+onGetFormulaValuesEnergy2 = onGetFormulaValues
+onGetFormulaValuesEarth2 = onGetFormulaValues
 
 combatPhysical1:setCallback(CALLBACK_PARAM_SKILLVALUE, "onGetFormulaValuesPhysical1")
 combatEnergy1:setCallback(CALLBACK_PARAM_SKILLVALUE, "onGetFormulaValuesEnergy1")

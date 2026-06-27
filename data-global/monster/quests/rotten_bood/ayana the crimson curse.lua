@@ -83,7 +83,7 @@ monster.loot = {
 	{ id = 43857, chance = 7000 },
 	{ name = "demonic essence", chance = 28000 },
 	{ name = "assassin star", chance = 5900, maxCount = 10 },
-	{ name = "great mana potion", chance = 31360, maxCount = 3 },
+	{ id = 238, chance = 31360, maxCount = 3 }, -- great mana potion
 	{ id = 281, chance = 4450 },
 	{ id = 282, chance = 4450 },
 	{ name = "seeds", chance = 4300 },

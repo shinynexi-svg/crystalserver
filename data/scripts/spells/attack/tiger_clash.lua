@@ -20,9 +20,9 @@ function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
 	return -total * 0.9, -total * 1.1
 end
 
-onGetFormulaValuesEnergy = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesEarth = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesPhysical = loadstring(string.dump(onGetFormulaValues))
+onGetFormulaValuesEnergy = onGetFormulaValues
+onGetFormulaValuesEarth = onGetFormulaValues
+onGetFormulaValuesPhysical = onGetFormulaValues
 
 combatPhysical:setCallback(CALLBACK_PARAM_SKILLVALUE, "onGetFormulaValuesPhysical")
 combatEnergy:setCallback(CALLBACK_PARAM_SKILLVALUE, "onGetFormulaValuesEnergy")

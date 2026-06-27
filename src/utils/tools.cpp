@@ -866,6 +866,11 @@ ShootTypeNames shootTypeNames = {
 	{ "diamondarrow", CONST_ANI_DIAMONDARROW },
 	{ "spectralbolt", CONST_ANI_SPECTRALBOLT },
 	{ "royalstar", CONST_ANI_ROYALSTAR },
+	{ "shatterstormarrow", CONST_ANI_SHATTERSTORMARROW },
+	{ "firestormarrow", CONST_ANI_FIRESTORMARROW },
+	{ "terrastormarrow", CONST_ANI_TERRASTORMARROW },
+	{ "froststormarrow", CONST_ANI_FROSTSTORMARROW },
+	{ "thunderstormarrow", CONST_ANI_THUNDERSTORMARROW },
 };
 
 CombatTypeNames combatTypeNames = {
@@ -1664,6 +1669,9 @@ SpellGroup_t stringToSpellGroup(const std::string &value) {
 	if (tmpStr == "greatbeams" || tmpStr == "10") {
 		return SPELLGROUP_GREAT_BEAMS;
 	}
+	if (tmpStr == "stance" || tmpStr == "11") {
+		return SPELLGROUP_STANCE;
+	}
 
 	return SPELLGROUP_NONE;
 }
@@ -2186,7 +2194,7 @@ std::string convertToUTF8(const std::string &input) {
 const std::unordered_set<std::string_view> harmonySpells = {
 	"Devastating Knockout",
 	"Greater Tiger Clash",
-	"Mass Spirit Mend",
+	// Vocation Adjustment: Mass Spirit Mend is no longer a spender (removed from the harmony set).
 	"Spiritual Outburst",
 	"Sweeping Takedown",
 	"Tiger Clash"
